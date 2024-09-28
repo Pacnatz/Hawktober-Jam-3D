@@ -24,6 +24,7 @@ public class PlayerMove : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
         StartCoroutine(StartCamera());
     }
 
@@ -54,6 +55,7 @@ public class PlayerMove : MonoBehaviour
         {
             direction += transform.right;
         }
+        direction.Normalize();
 
         rb.linearVelocity = new Vector3(direction.x * movementSpeed, rb.linearVelocity.y, direction.z * movementSpeed);
     }
