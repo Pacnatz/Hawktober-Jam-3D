@@ -54,6 +54,7 @@ public class PlayerMove : MonoBehaviour
         {
             direction += transform.right;
         }
+        direction.Normalize();
 
         rb.linearVelocity = new Vector3(direction.x * movementSpeed, rb.linearVelocity.y, direction.z * movementSpeed);
     }
