@@ -25,17 +25,17 @@ public class PlayerMove : MonoBehaviour
         rb = GetComponent<Rigidbody>();
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        StartCoroutine(StartCamera());
+        StartCoroutine(StartCamera()); //Wait .5s before starting camera
     }
 
     void Update()
     {
         Move();
-        MoveCamera();
+        RotatePlayer();
         CheckFloor();
         Jump();
-    }
 
+    }
     private void Move()
     {
         direction = Vector3.zero;
@@ -59,8 +59,8 @@ public class PlayerMove : MonoBehaviour
 
         rb.linearVelocity = new Vector3(direction.x * movementSpeed, rb.linearVelocity.y, direction.z * movementSpeed);
     }
-
-    private void MoveCamera()
+    
+    private void RotatePlayer()
     {
         if (startCamera)
         {
@@ -89,7 +89,6 @@ public class PlayerMove : MonoBehaviour
             onFloor = false;
         }
     }
-
 
     IEnumerator StartCamera()
     {

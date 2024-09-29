@@ -26,7 +26,7 @@ public class CameraScript : MonoBehaviour
             rotationX -= Input.GetAxis("Mouse Y") * cameraSensitivity * Time.deltaTime;
             rotationX = Mathf.Clamp(rotationX, -80, 80);
 
-            transform.rotation = Quaternion.Euler(rotationX, playerScript.rotationY, 0);
+            transform.rotation = Quaternion.Euler(rotationX, playerScript.rotationY, 0); //rotationY is player's rotation
         }
     }
 
