@@ -3,10 +3,10 @@ using UnityEngine;
 
 public class CameraScript : MonoBehaviour
 {
+    [HideInInspector]
+    public bool CameraLock = false;
     [SerializeField]
     private PlayerMove playerScript;
-    [SerializeField]
-    private float cameraSensitivity = 500f;
 
     private bool startCamera;
 
@@ -20,10 +20,10 @@ public class CameraScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (startCamera)
+        if (startCamera && !CameraLock)
         {
             //Rotate camera object by rotationX & clamp rotationX to prevent issue with flipping screen
-            rotationX -= Input.GetAxis("Mouse Y") * cameraSensitivity * Time.deltaTime;
+            rotationX -= Input.GetAxis("Mouse Y") * playerScript.cameraSensitivity * Time.deltaTime;
             rotationX = Mathf.Clamp(rotationX, -80, 80);
 
             transform.rotation = Quaternion.Euler(rotationX, playerScript.rotationY, 0); //rotationY is player's rotation

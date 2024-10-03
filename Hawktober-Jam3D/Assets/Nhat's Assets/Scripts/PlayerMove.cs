@@ -4,15 +4,15 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
-    private float movementSpeed = 5;
+    public float movementSpeed = 5; //Can be updated by shovel script
     [SerializeField]
     private float jumpForce = 5;
     [SerializeField]
-    private float cameraSensitivity = 500f;
-    [SerializeField]
-    private Camera playerCamera;
+    public float cameraSensitivity = 500f; //Can be updated by shovel script
     [SerializeField]
     private LayerMask groundLayer;
+    [SerializeField]
+    private LayerMask graveLayer;
 
 
     public float rotationY;
@@ -23,9 +23,10 @@ public class PlayerMove : MonoBehaviour
     void Awake()
     {
         rb = GetComponent<Rigidbody>();
+        StartCoroutine(StartCamera()); //Wait .5s before starting camera
+
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        StartCoroutine(StartCamera()); //Wait .5s before starting camera
     }
 
     void Update()
@@ -34,7 +35,6 @@ public class PlayerMove : MonoBehaviour
         RotatePlayer();
         CheckFloor();
         Jump();
-
     }
     private void Move()
     {
@@ -68,14 +68,6 @@ public class PlayerMove : MonoBehaviour
             transform.rotation = Quaternion.Euler(0, rotationY, 0);
         }
     }
-
-    private void Jump()
-    {
-        if (Input.GetKeyDown(KeyCode.Space) && onFloor)
-        {
-            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
-        }
-    }
     private void CheckFloor()
     {
         Vector3 offset = new Vector3(0, .1f, 0);
@@ -84,12 +76,22 @@ public class PlayerMove : MonoBehaviour
         {
             onFloor = true;
         }
+        else if (Physics.Raycast(transform.position + offset, Vector3.down, rayDistance, graveLayer))
+        {
+            onFloor = true;
+        }
         else
         {
             onFloor = false;
         }
     }
-
+    private void Jump()
+    {
+        if (Input.GetKeyDown(KeyCode.Space) && onFloor)
+        {
+            rb.linearVelocity = new Vector3(rb.linearVelocity.x, jumpForce, rb.linearVelocity.z);
+        }
+    }
     IEnumerator StartCamera()
     {
         yield return new WaitForSeconds(.5f);
