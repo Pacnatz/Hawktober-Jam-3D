@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using UnityEngine;
 
@@ -5,6 +6,11 @@ public class SwitchWeapons : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] weapons;
+
+    [SerializeField]
+    private UIScript uiScript;
+    private int uiAmmoArrayPosition;
+
     public float DockTime = .25f;
 
     private GameObject currentWeapon;
@@ -26,6 +32,8 @@ public class SwitchWeapons : MonoBehaviour
     private void Update()
     {
         GetInput();
+
+        
     }
     private void GetInput()
     {
@@ -45,6 +53,7 @@ public class SwitchWeapons : MonoBehaviour
     {
         yield return new WaitForSeconds(.1f); //Idk why but this delay is needed
         weapon.GetComponent<WeaponScript>().Activate();
+
         yield return new WaitForSeconds(DockTime);
         isSwitchingWeapon = false;
     }
@@ -61,7 +70,7 @@ public class SwitchWeapons : MonoBehaviour
             oldWeapon.GetComponent<GunScript>().scopedIn = false;
         }
         */
-
+        uiScript.ammoArrayPosition = Array.IndexOf(weapons, newWeapon);
         yield return new WaitForSeconds(DockTime); //How long the animation takes
         currentWeapon = newWeapon;
         StartCoroutine(DrawWeapon(newWeapon));
@@ -71,4 +80,5 @@ public class SwitchWeapons : MonoBehaviour
     {
         weapons[0].GetComponent<ShovelScript>().freezeCamera = false;
     }
+
 }

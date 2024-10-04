@@ -23,24 +23,35 @@ public class GunScript : WeaponScript
     private ParticleSystem particles;
     private GameObject gunLight;
 
+    //Ammo variables
+    private int currentAmmo = 8;
+    private int holdingAmmo = 30;
+    private int maxAmmo;
+
+    private UIScript uiScript;
 
     private void Start()
     {
         anim = mainCamera.GetComponent<Animator>();
         particles = barrel.GetChild(0).GetComponent<ParticleSystem>();
         gunLight = barrel.GetChild(1).gameObject;
+        uiScript = FindAnyObjectByType<UIScript>();
     }
 
     void Update()
     {
         GetInput();
+
+        uiScript.gunText = $"{currentAmmo}/{holdingAmmo}";
     }
 
     private void GetInput()
     {
         //Left Mouse button
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButtonDown(0) && currentAmmo > 0)
         {
+            currentAmmo--;
+
 
             Vector3 direction = target.position - barrel.position;
             direction.Normalize();
