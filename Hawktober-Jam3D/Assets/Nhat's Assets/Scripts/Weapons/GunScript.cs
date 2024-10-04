@@ -17,7 +17,8 @@ public class GunScript : WeaponScript
     [SerializeField]
     private PlayerMove playerScript;
 
-    private bool scopedIn;
+    [HideInInspector]
+    public bool scopedIn;
     private Animator anim;
     private ParticleSystem particles;
     private GameObject gunLight;
@@ -40,6 +41,7 @@ public class GunScript : WeaponScript
         //Left Mouse button
         if (Input.GetMouseButtonDown(0))
         {
+
             Vector3 direction = target.position - barrel.position;
             direction.Normalize();
 
@@ -48,7 +50,6 @@ public class GunScript : WeaponScript
 
             GameObject bullet = Instantiate(bulletPrefab, barrel.position, Quaternion.identity);
             bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
-
             //Shoot animations
             if (scopedIn)
             {
@@ -75,7 +76,6 @@ public class GunScript : WeaponScript
             Scope(false);
         }
     }
-
     private void Scope(bool value)
     {
         if (value)

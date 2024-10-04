@@ -5,7 +5,7 @@ public class SwitchWeapons : MonoBehaviour
 {
     [SerializeField]
     private GameObject[] weapons;
-    public float DockTime = .5f;
+    public float DockTime = .25f;
 
     private GameObject currentWeapon;
     private bool isSwitchingWeapon = false;
@@ -32,10 +32,12 @@ public class SwitchWeapons : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Alpha1) && currentWeapon != weapons[0] && !isSwitchingWeapon) //Make sure not to switch out weapon with same weapon
         {
             StartCoroutine(DockWeapon(currentWeapon, weapons[0]));
+            UnFreezePlayer();
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) && currentWeapon != weapons[1] && !isSwitchingWeapon) 
         {
             StartCoroutine(DockWeapon(currentWeapon, weapons[1]));
+            UnFreezePlayer();
         }
     }
 
@@ -51,9 +53,22 @@ public class SwitchWeapons : MonoBehaviour
     {
         isSwitchingWeapon = true;
         oldWeapon.GetComponent<WeaponScript>().DeActivate();
+
+        /*
+        //Toggle scopedIn for gun off (could code this better)
+        if (oldWeapon == weapons[1])
+        {
+            oldWeapon.GetComponent<GunScript>().scopedIn = false;
+        }
+        */
+
         yield return new WaitForSeconds(DockTime); //How long the animation takes
         currentWeapon = newWeapon;
         StartCoroutine(DrawWeapon(newWeapon));
     }
 
+    private void UnFreezePlayer() //Unfreezes player when digging
+    {
+        weapons[0].GetComponent<ShovelScript>().freezeCamera = false;
+    }
 }
