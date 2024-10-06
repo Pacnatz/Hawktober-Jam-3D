@@ -39,11 +39,7 @@ public class GraveDirtScript : MonoBehaviour
                 anim.Play("Phase2");
                 break;
             case 2:
-                animationFrame++;
                 anim.Play("Phase3");
-                break;
-            case 3:
-                anim.Play("Phase4");
                 GraveDiggable = false; //Stops shovel to continue digging
                 break;
             default:
@@ -54,7 +50,7 @@ public class GraveDirtScript : MonoBehaviour
     }
     public void ResetAnimation()
     {
-        animationFrame = 4;
+        animationFrame = 3;
         GraveDiggable = true;
         PlayAnimation();
     }

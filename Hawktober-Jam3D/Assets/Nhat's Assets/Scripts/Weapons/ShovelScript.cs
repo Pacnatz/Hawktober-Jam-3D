@@ -66,7 +66,7 @@ public class ShovelScript : WeaponScript
 
     private void CheckRayAtGrave()
     {
-        if (Physics.Raycast(mainCamera.position, mainCamera.forward, out RaycastHit graveDirt, 2.5f, graveDirtLayer)) //Shoots raycast from camera to graveyard dirt
+        if (Physics.Raycast(mainCamera.position, mainCamera.forward, out RaycastHit graveDirt, 3.5f, graveDirtLayer)) //Shoots raycast from camera to graveyard dirt
         {
             selectedGraveDirt = graveDirt.collider.gameObject.GetComponent<GraveDirtScript>();
             if (selectedGraveDirt.GraveDiggable && selectedGraveDirt.PlayerOnTop) //if grave is diggable and player is on top

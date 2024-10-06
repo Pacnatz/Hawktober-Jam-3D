@@ -12,7 +12,7 @@ public class UIScript : MonoBehaviour
     public RectTransform gunContainer;
     [HideInInspector]
     private TMP_Text gunTMPro;
-    public string gunText;
+    public GunScript gunScript;
     private Vector3 gunVelocity = Vector3.zero;
 
     public int ammoArrayPosition = 0;
@@ -36,8 +36,8 @@ public class UIScript : MonoBehaviour
                 break;
         }
 
-        gunTMPro.text = gunText;
 
+        gunTMPro.text = $"{gunScript.currentAmmo}/{gunScript.holdingAmmo}";
 
     }
 }

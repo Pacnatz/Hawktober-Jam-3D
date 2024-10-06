@@ -9,7 +9,6 @@ public class SwitchWeapons : MonoBehaviour
 
     [SerializeField]
     private UIScript uiScript;
-    private int uiAmmoArrayPosition;
 
     public float DockTime = .25f;
 
@@ -63,14 +62,7 @@ public class SwitchWeapons : MonoBehaviour
         isSwitchingWeapon = true;
         oldWeapon.GetComponent<WeaponScript>().DeActivate();
 
-        /*
-        //Toggle scopedIn for gun off (could code this better)
-        if (oldWeapon == weapons[1])
-        {
-            oldWeapon.GetComponent<GunScript>().scopedIn = false;
-        }
-        */
-        uiScript.ammoArrayPosition = Array.IndexOf(weapons, newWeapon);
+        uiScript.ammoArrayPosition = Array.IndexOf(weapons, newWeapon); //Pull current weapon ammo card out
         yield return new WaitForSeconds(DockTime); //How long the animation takes
         currentWeapon = newWeapon;
         StartCoroutine(DrawWeapon(newWeapon));
@@ -81,4 +73,28 @@ public class SwitchWeapons : MonoBehaviour
         weapons[0].GetComponent<ShovelScript>().freezeCamera = false;
     }
 
+
+
+
+
+
+
+    //****Temporary Fix... Called from animation event for gun reload functions**** Unable to call gunscript events from mainCamera animationplayer
+    //TO FIX: Move animator from mainCamera to M1911 Object, fix all animations..
+    public void SlowPlayer()
+    {
+        weapons[1].GetComponent<GunScript>().SlowPlayer();
+    }
+    public void UnSlowPlayer()
+    {
+        weapons[1].GetComponent<GunScript>().UnSlowPlayer();
+    }
+    public void UpdateAmmo()
+    {
+        weapons[1].GetComponent<GunScript>().UpdateAmmo();
+    }
+    public void ScopedIn()
+    {
+        weapons[1].GetComponent<GunScript>().ScopeIn();
+    }
 }

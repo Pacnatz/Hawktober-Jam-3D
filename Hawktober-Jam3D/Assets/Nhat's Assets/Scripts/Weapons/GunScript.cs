@@ -4,7 +4,7 @@ using UnityEngine.InputSystem;
 public class GunScript : WeaponScript
 {
 
-    public float bulletSpeed = 20f;
+    public float bulletSpeed = 40f;
 
     [SerializeField]
     private Camera mainCamera;
@@ -18,14 +18,18 @@ public class GunScript : WeaponScript
     private PlayerMove playerScript;
 
     [HideInInspector]
-    public bool scopedIn;
+    public bool scopedIn = false;
     private Animator anim;
+    [HideInInspector]
+    public bool animToggle = true; 
     private ParticleSystem particles;
     private GameObject gunLight;
 
     //Ammo variables
-    private int currentAmmo = 8;
-    private int holdingAmmo = 30;
+    [HideInInspector]
+    public int currentAmmo = 8;
+    [HideInInspector]
+    public int holdingAmmo = 30;
     private int maxAmmo;
 
     private UIScript uiScript;
@@ -42,13 +46,12 @@ public class GunScript : WeaponScript
     {
         GetInput();
 
-        uiScript.gunText = $"{currentAmmo}/{holdingAmmo}";
     }
 
     private void GetInput()
     {
         //Left Mouse button
-        if (Input.GetMouseButtonDown(0) && currentAmmo > 0)
+        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle)
         {
             currentAmmo--;
 
@@ -80,13 +83,35 @@ public class GunScript : WeaponScript
         //Right mouse button
         if (Input.GetMouseButtonDown(1))
         {
-            Scope(true);
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("End") ||
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOut") ||
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire") && animToggle)
+            {
+                scopedIn = true;
+                anim.Play("ScopedIn");
+                //Scope in movespeed
+                playerScript.movementSpeed = 3.5f;
+            }
         }
         if (Input.GetMouseButtonUp(1))
         {
-            Scope(false);
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Scope") || 
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedIn") ||
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire") && animToggle) //If either scope or scopedIn is playing
+            {
+                scopedIn = false;
+                anim.Play("ScopeOut");
+                playerScript.movementSpeed = 5f;
+            }
         }
+        //Reload
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < 8 && holdingAmmo > 0)
+        {
+            anim.Play("Reload");
+        }
+
     }
+    /*
     private void Scope(bool value)
     {
         if (value)
@@ -101,6 +126,37 @@ public class GunScript : WeaponScript
             scopedIn = false;
             anim.Play("ScopeOut");
             playerScript.movementSpeed = 5f;
+        }
+    }
+    */
+
+    //Called from reload animation events
+    public void SlowPlayer()
+    {
+        playerScript.movementSpeed = 3.5f;
+    }
+    public void UnSlowPlayer()
+    {
+        playerScript.movementSpeed = 5f;
+    }
+    public void UpdateAmmo()
+    {
+        if (holdingAmmo >= 8)
+        {
+            holdingAmmo -= 8 - currentAmmo;
+            currentAmmo = 8;
+        }
+        else
+        {
+            currentAmmo = holdingAmmo;
+            holdingAmmo = 0;
+        }
+    }
+    public void ScopeIn() //Called from switch weapons
+    {
+        if (Input.GetMouseButton(1))
+        {
+            anim.Play("ScopedIn");
         }
     }
 

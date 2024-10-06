@@ -6,6 +6,8 @@ public class AmmoBox : MonoBehaviour
     private float rotationSpeed = 180;
     [SerializeField]
     private float movementSpeed = 1.2f;
+    [SerializeField]
+    private GunScript gunScript;
 
     private Vector3 endPos;
     private bool floatingUp = true;
@@ -15,6 +17,7 @@ public class AmmoBox : MonoBehaviour
     {
         endPos = transform.position + new Vector3(0, 1.2f, 0);
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
+        gunScript = Camera.main.transform.Find("M1911").GetComponent<GunScript>();
     }
 
     void Update()
@@ -38,6 +41,7 @@ public class AmmoBox : MonoBehaviour
             if (!floatingUp)
             {
                 //Add code for ammo update here.
+                gunScript.holdingAmmo += 24;
                 Destroy(gameObject);
             }
         }
