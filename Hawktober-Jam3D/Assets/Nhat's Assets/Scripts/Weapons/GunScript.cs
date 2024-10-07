@@ -45,7 +45,7 @@ public class GunScript : WeaponScript
     void Update()
     {
         GetInput();
-
+        Debug.Log(playerScript.movementSpeed);
     }
 
     private void GetInput()
@@ -101,7 +101,7 @@ public class GunScript : WeaponScript
             {
                 scopedIn = false;
                 anim.Play("ScopeOut");
-                playerScript.movementSpeed = 5f;
+                playerScript.movementSpeed = 6f;
             }
         }
         //Reload
@@ -111,24 +111,6 @@ public class GunScript : WeaponScript
         }
 
     }
-    /*
-    private void Scope(bool value)
-    {
-        if (value)
-        {
-            scopedIn = true;
-            anim.Play("ScopedIn");
-            //Scope in movespeed
-            playerScript.movementSpeed = 3.5f;
-        }
-        else
-        {
-            scopedIn = false;
-            anim.Play("ScopeOut");
-            playerScript.movementSpeed = 5f;
-        }
-    }
-    */
 
     //Called from reload animation events
     public void SlowPlayer()
@@ -137,7 +119,7 @@ public class GunScript : WeaponScript
     }
     public void UnSlowPlayer()
     {
-        playerScript.movementSpeed = 5f;
+        playerScript.movementSpeed = 6f;
     }
     public void UpdateAmmo()
     {
@@ -157,6 +139,8 @@ public class GunScript : WeaponScript
         if (Input.GetMouseButton(1))
         {
             anim.Play("ScopedIn");
+            scopedIn = true;
+            playerScript.movementSpeed = 3.5f;
         }
     }
 

@@ -60,7 +60,7 @@ public class ShovelScript : WeaponScript
         else
         {
             playerScript.cameraSensitivity = 500f;
-            playerScript.movementSpeed = 5f;
+            playerScript.movementSpeed = 6f;
         }
     }
 

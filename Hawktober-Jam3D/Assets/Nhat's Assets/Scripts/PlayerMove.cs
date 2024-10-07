@@ -4,7 +4,7 @@ using UnityEngine;
 public class PlayerMove : MonoBehaviour
 {
     [SerializeField]
-    public float movementSpeed = 5; //Can be updated by shovel script
+    public float movementSpeed = 6; //Can be updated by shovel script and reloading
     [SerializeField]
     private float jumpForce = 5;
     [SerializeField]
@@ -35,6 +35,7 @@ public class PlayerMove : MonoBehaviour
         RotatePlayer();
         CheckFloor();
         Jump();
+        
     }
     private void Move()
     {

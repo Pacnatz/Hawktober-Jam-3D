@@ -46,6 +46,11 @@ public class SwitchWeapons : MonoBehaviour
             StartCoroutine(DockWeapon(currentWeapon, weapons[1]));
             UnFreezePlayer();
         }
+        if (Input.GetKeyDown(KeyCode.Alpha3) && currentWeapon != weapons[2] && !isSwitchingWeapon)
+        {
+            StartCoroutine(DockWeapon(currentWeapon, weapons[2]));
+            UnFreezePlayer();
+        }
     }
 
     private IEnumerator DrawWeapon(GameObject weapon)
@@ -59,6 +64,7 @@ public class SwitchWeapons : MonoBehaviour
 
     private IEnumerator DockWeapon(GameObject oldWeapon, GameObject newWeapon)
     {
+        Debug.Log(oldWeapon);
         isSwitchingWeapon = true;
         oldWeapon.GetComponent<WeaponScript>().DeActivate();
 
