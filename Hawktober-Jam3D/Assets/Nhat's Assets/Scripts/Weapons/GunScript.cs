@@ -45,7 +45,6 @@ public class GunScript : WeaponScript
     void Update()
     {
         GetInput();
-        Debug.Log(playerScript.movementSpeed);
     }
 
     private void GetInput()

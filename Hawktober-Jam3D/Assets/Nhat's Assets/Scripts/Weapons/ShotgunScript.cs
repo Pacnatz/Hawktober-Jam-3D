@@ -28,10 +28,8 @@ public class ShotgunScript : WeaponScript
     private GameObject gunLight;
 
     //Ammo variables
-    [HideInInspector]
-    public int currentAmmo = 8;
-    [HideInInspector]
-    public int holdingAmmo = 30;
+    public int currentAmmo;
+    public int holdingAmmo;
     private int maxAmmo;
 
     private UIScript uiScript;
@@ -43,6 +41,9 @@ public class ShotgunScript : WeaponScript
         particles = barrel.GetChild(0).GetComponent<ParticleSystem>();
         gunLight = barrel.GetChild(1).gameObject;
         uiScript = FindAnyObjectByType<UIScript>();
+
+        currentAmmo = 5;
+        holdingAmmo = 18;
     }
 
     void Update()
@@ -71,10 +72,18 @@ public class ShotgunScript : WeaponScript
             if (scopedIn)
             {
                 anim.Play("ScopedInFire");
+                if (currentAmmo != 0)
+                {
+                    StartCoroutine(WaitForPump());
+                }
             }
             else
             {
                 anim.Play("ScopeOutFire");
+                if (currentAmmo != 0)
+                {
+                    StartCoroutine(WaitForPump());
+                }
             }
             //Fire Lights and Particles
             particles.Play();
@@ -108,7 +117,7 @@ public class ShotgunScript : WeaponScript
             }
         }
         //Reload
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < 8 && holdingAmmo > 0)
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < 5 && holdingAmmo > 0)
         {
             anim.Play("Reload");
         }
@@ -126,10 +135,10 @@ public class ShotgunScript : WeaponScript
     }
     public void UpdateAmmo()
     {
-        if (holdingAmmo >= 8)
+        if (holdingAmmo >= 5)
         {
-            holdingAmmo -= 8 - currentAmmo;
-            currentAmmo = 8;
+            holdingAmmo -= 5 - currentAmmo;
+            currentAmmo = 5;
         }
         else
         {
@@ -182,4 +191,26 @@ public class ShotgunScript : WeaponScript
     {
         mainCamera.fieldOfView = 50;
     }
+
+    private IEnumerator WaitForPump()
+    {
+        yield return new WaitForSeconds(.33f);
+        if (scopedIn)
+        {
+            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire"))
+            {
+                anim.Play("PumpIn");
+            }
+            
+        }
+        else
+        {
+            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire"))
+            {
+                anim.Play("PumpOut");
+            }
+        }
+        
+    }
+
 }

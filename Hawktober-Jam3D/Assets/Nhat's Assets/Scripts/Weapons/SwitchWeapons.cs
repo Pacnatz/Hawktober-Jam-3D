@@ -64,7 +64,6 @@ public class SwitchWeapons : MonoBehaviour
 
     private IEnumerator DockWeapon(GameObject oldWeapon, GameObject newWeapon)
     {
-        Debug.Log(oldWeapon);
         isSwitchingWeapon = true;
         oldWeapon.GetComponent<WeaponScript>().DeActivate();
 
