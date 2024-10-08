@@ -8,7 +8,9 @@ public class GraveDirtScript : MonoBehaviour
     public bool PlayerOnTop = false;
 
     [SerializeField]
-    private GameObject ammoBoxPrefab;
+    private GameObject gunAmmoBoxPrefab;
+    [SerializeField]
+    private GameObject shotgunAmmoBoxPrefab;
     [SerializeField]
     private Transform ammoSpawnPos;
 
@@ -48,28 +50,27 @@ public class GraveDirtScript : MonoBehaviour
                 break;
         }
     }
-    public void ResetAnimation()
+    public void ResetAnimation() //Called from animatino player
     {
         animationFrame = 3;
         GraveDiggable = true;
         PlayAnimation();
     }
-    public void SpawnAmmo()
+    public void SpawnAmmo() //Called from animation player
     {
-        GameObject ammoBox = Instantiate(ammoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
-    }
-    private void OnTriggerEnter(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
+        int choice = Random.Range(1, 3);
+        Debug.Log(choice);
+        switch (choice)
         {
-            PlayerOnTop = true;
+            case 1:
+                Instantiate(gunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
+                break;
+            case 2:
+                Instantiate(shotgunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
+                break;
         }
+        
     }
-    private void OnTriggerExit(Collider other)
-    {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
-        {
-            PlayerOnTop = false;
-        }
-    }
+
+
 }

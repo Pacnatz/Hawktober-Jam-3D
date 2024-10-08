@@ -5,8 +5,8 @@ public class UIScript : MonoBehaviour
 {
 
     private Vector3 activeContainerPosition = new Vector3(200, 150, 0);
-    private Vector3 inactiveContainerPosition = new Vector3(-200, 150, 0);
-    private float containerMoveSpeed = 100f;
+    private Vector3 inactiveContainerPosition = new Vector3(-300, 150, 0);
+    private float containerMoveSpeed = 40f;
 
     //M1911 Container
     public RectTransform gunContainer;

@@ -6,6 +6,8 @@ public class ShotgunScript : WeaponScript
 
 
     public float bulletSpeed = 40f;
+    private bool canFire = true;
+
 
     [SerializeField]
     private Transform target;
@@ -15,6 +17,7 @@ public class ShotgunScript : WeaponScript
     private GameObject bulletPrefab;
     [SerializeField]
     private PlayerMove playerScript;
+    private int bulletAmount = 10;
 
     [HideInInspector]
     public bool scopedIn = false;
@@ -23,7 +26,9 @@ public class ShotgunScript : WeaponScript
     private Camera mainCamera;
     private Animator anim;
     [HideInInspector]
-    public bool animToggle = true;
+    public bool animToggle = true;      //Called from animation player
+    [HideInInspector]                   
+    public bool IsReloading = false;    //Called from animation player
     private ParticleSystem particles;
     private GameObject gunLight;
 
@@ -32,7 +37,6 @@ public class ShotgunScript : WeaponScript
     public int holdingAmmo;
     private int maxAmmo;
 
-    private UIScript uiScript;
 
     private void Start()
     {
@@ -40,7 +44,6 @@ public class ShotgunScript : WeaponScript
         anim = GetComponent<Animator>();
         particles = barrel.GetChild(0).GetComponent<ParticleSystem>();
         gunLight = barrel.GetChild(1).gameObject;
-        uiScript = FindAnyObjectByType<UIScript>();
 
         currentAmmo = 5;
         holdingAmmo = 18;
@@ -55,21 +58,29 @@ public class ShotgunScript : WeaponScript
     private void GetInput()
     {
         //Left Mouse button
-        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle)
+        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle && canFire)
         {
             currentAmmo--;
+            canFire = false;
 
 
-            Vector3 direction = target.position - barrel.position;
-            direction.Normalize();
+            
 
-            Vector3 offset = GenerateOffSet();
-            direction += offset;
 
-            GameObject bullet = Instantiate(bulletPrefab, barrel.position, Quaternion.identity);
-            bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
+            for (int i = 0; i < bulletAmount; i++)
+            {
+                Vector3 direction = target.position - barrel.position;
+                direction.Normalize();
+
+                Vector3 offset = GenerateOffSet();
+                direction += offset;
+
+                GameObject bullet = Instantiate(bulletPrefab, barrel.position, Quaternion.identity);
+                bullet.GetComponent<Rigidbody>().linearVelocity = direction * bulletSpeed;
+            }
+            
             //Shoot animations
-            if (scopedIn)
+            if (scopedIn && !IsReloading)
             {
                 anim.Play("ScopedInFire");
                 if (currentAmmo != 0)
@@ -97,7 +108,8 @@ public class ShotgunScript : WeaponScript
         {
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("End") ||
                 anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOut") ||
-                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire") && animToggle)
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire") ||
+                anim.GetCurrentAnimatorStateInfo(0).IsName("PumpOut") && animToggle)
             {
                 scopedIn = true;
                 anim.Play("ScopedIn");
@@ -109,7 +121,8 @@ public class ShotgunScript : WeaponScript
         {
             if (anim.GetCurrentAnimatorStateInfo(0).IsName("Scope") ||
                 anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedIn") ||
-                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire") && animToggle) //If either scope or scopedIn is playing
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire") ||
+                anim.GetCurrentAnimatorStateInfo(0).IsName("PumpIn") && animToggle) //If either scope or scopedIn is playing
             {
                 scopedIn = false;
                 anim.Play("ScopeOut");
@@ -117,7 +130,7 @@ public class ShotgunScript : WeaponScript
             }
         }
         //Reload
-        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < 5 && holdingAmmo > 0)
+        if (Input.GetKeyDown(KeyCode.R) && currentAmmo < 5 && holdingAmmo > 0 && !IsReloading)
         {
             anim.Play("Reload");
         }
@@ -135,16 +148,22 @@ public class ShotgunScript : WeaponScript
     }
     public void UpdateAmmo()
     {
-        if (holdingAmmo >= 5)
+        if (holdingAmmo > 0)
         {
-            holdingAmmo -= 5 - currentAmmo;
-            currentAmmo = 5;
+            currentAmmo++;
+            holdingAmmo--;
+            if (holdingAmmo <= 0)
+            {
+                anim.SetTrigger("ReloadingDone");
+            }
         }
-        else
+        if (currentAmmo >= 5)
         {
-            currentAmmo = holdingAmmo;
-            holdingAmmo = 0;
+            anim.SetTrigger("ReloadingDone");
         }
+        scopedIn = false;
+        canFire = true;
+
     }
     public void ScopeIn() //Called from switch weapons
     {
@@ -160,11 +179,11 @@ public class ShotgunScript : WeaponScript
     {
         if (scopedIn)
         {
-            return Vector3.zero;
+            return new Vector3(Random.Range(-0.04f, .04f), Random.Range(-0.04f, 0.04f), 0);
         }
         else
         {
-            return new Vector3(Random.Range(-0.06f, .04f), Random.Range(-0.04f, 0.06f), 0);
+            return new Vector3(Random.Range(-0.09f, .06f), Random.Range(-0.06f, 0.09f), 0);
         }
     }
 
@@ -192,25 +211,36 @@ public class ShotgunScript : WeaponScript
         mainCamera.fieldOfView = 50;
     }
 
-    private IEnumerator WaitForPump()
+    private IEnumerator WaitForPump() //Delay before next shot
     {
-        yield return new WaitForSeconds(.33f);
+        
+        yield return new WaitForSeconds(.4f);
+        canFire = true;
+        /*
         if (scopedIn)
         {
-            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire"))
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload") == false &&
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire") == false)
             {
                 anim.Play("PumpIn");
             }
+
+
+
+
             
         }
         else
         {
-            if (!anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire"))
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload") == false &&
+                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire") == false)
             {
                 anim.Play("PumpOut");
             }
         }
-        
+        yield return new WaitForSeconds(.15f);
+        canFire = true;
+        */
     }
 
 }

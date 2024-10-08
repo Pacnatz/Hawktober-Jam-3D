@@ -6,21 +6,22 @@ public class AmmoBox : MonoBehaviour
     private float rotationSpeed = 180;
     [SerializeField]
     private float movementSpeed = 1.2f;
-    [SerializeField]
+
     private GunScript gunScript;
 
-    private Vector3 endPos;
-    private bool floatingUp = true;
-    private ParticleSystem particles;
+    protected Vector3 endPos;
+    protected bool floatingUp = true;
+    protected ParticleSystem particles;
 
     void Start()
     {
         endPos = transform.position + new Vector3(0, 1.2f, 0);
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
         gunScript = Camera.main.transform.Find("M1911").GetComponent<GunScript>();
+        particles.Play();
     }
 
-    void Update()
+    protected virtual void Update()
     {
         if (floatingUp)
         {
@@ -29,12 +30,12 @@ public class AmmoBox : MonoBehaviour
             if (transform.position.y >= endPos.y)
             {
                 floatingUp = false;
-                particles.Play();
+                
             }
         }
     }
 
-    private void OnTriggerStay(Collider other)
+    protected virtual void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {

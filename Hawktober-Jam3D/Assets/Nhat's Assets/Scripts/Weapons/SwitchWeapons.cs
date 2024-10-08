@@ -55,11 +55,12 @@ public class SwitchWeapons : MonoBehaviour
 
     private IEnumerator DrawWeapon(GameObject weapon)
     {
-        yield return new WaitForSeconds(.1f); //Idk why but this delay is needed
+        yield return new WaitForSeconds(.2f); //Idk why but this delay is needed
+        isSwitchingWeapon = false;
         weapon.GetComponent<WeaponScript>().Activate();
 
         yield return new WaitForSeconds(DockTime);
-        isSwitchingWeapon = false;
+        
     }
 
     private IEnumerator DockWeapon(GameObject oldWeapon, GameObject newWeapon)
