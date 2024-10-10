@@ -63,10 +63,6 @@ public class ShotgunScript : WeaponScript
             currentAmmo--;
             canFire = false;
 
-
-            
-
-
             for (int i = 0; i < bulletAmount; i++)
             {
                 Vector3 direction = target.position - barrel.position;
@@ -179,11 +175,11 @@ public class ShotgunScript : WeaponScript
     {
         if (scopedIn)
         {
-            return new Vector3(Random.Range(-0.04f, .04f), Random.Range(-0.04f, 0.04f), 0);
+            return new Vector3(Random.Range(-0.04f, .04f), Random.Range(-0.04f, 0.04f), Random.Range(-0.04f, 0.04f));
         }
         else
         {
-            return new Vector3(Random.Range(-0.09f, .06f), Random.Range(-0.06f, 0.09f), 0);
+            return new Vector3(Random.Range(-0.09f, .06f), Random.Range(-0.06f, 0.09f), Random.Range(-0.09f, 0.06f));
         }
     }
 

@@ -59,7 +59,6 @@ public class GraveDirtScript : MonoBehaviour
     public void SpawnAmmo() //Called from animation player
     {
         int choice = Random.Range(1, 3);
-        Debug.Log(choice);
         switch (choice)
         {
             case 1:

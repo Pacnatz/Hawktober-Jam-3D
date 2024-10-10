@@ -26,7 +26,7 @@ public class StreetLight : MonoBehaviour
         if (countDown <= 0)
         {
             countDown = Random.Range(0, 20);
-            int randomNumber = Random.Range(1, 50);
+            int randomNumber = Random.Range(1, 10);
             if (randomNumber == 1)
             {
                 light1.SetActive(false);

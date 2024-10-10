@@ -17,7 +17,7 @@ public class SwitchWeapons : MonoBehaviour
 
     private void Start()
     {
-        currentWeapon = weapons[0]; //Start with shovel
+        currentWeapon = weapons[2]; //Start with shovel
         StartCoroutine(DrawWeapon(currentWeapon));
 
         //Safe mode sets all weapons active
@@ -38,18 +38,18 @@ public class SwitchWeapons : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.Alpha1) && currentWeapon != weapons[0] && !isSwitchingWeapon) //Make sure not to switch out weapon with same weapon
         {
-            StartCoroutine(DockWeapon(currentWeapon, weapons[0]));
             UnFreezePlayer();
+            StartCoroutine(DockWeapon(currentWeapon, weapons[0]));
         }
         if (Input.GetKeyDown(KeyCode.Alpha2) && currentWeapon != weapons[1] && !isSwitchingWeapon) 
         {
-            StartCoroutine(DockWeapon(currentWeapon, weapons[1]));
             UnFreezePlayer();
+            StartCoroutine(DockWeapon(currentWeapon, weapons[1]));
         }
         if (Input.GetKeyDown(KeyCode.Alpha3) && currentWeapon != weapons[2] && !isSwitchingWeapon)
         {
-            StartCoroutine(DockWeapon(currentWeapon, weapons[2]));
             UnFreezePlayer();
+            StartCoroutine(DockWeapon(currentWeapon, weapons[2]));
         }
     }
 
@@ -76,7 +76,7 @@ public class SwitchWeapons : MonoBehaviour
 
     private void UnFreezePlayer() //Unfreezes player when digging
     {
-        weapons[0].GetComponent<ShovelScript>().freezeCamera = false;
+        weapons[2].GetComponent<ShovelScript>().freezeCamera = false;
     }
 
 
