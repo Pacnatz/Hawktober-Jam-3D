@@ -3,6 +3,7 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 public class GunScript : WeaponScript
 {
+    //Damage 30
 
     public float bulletSpeed = 40f;
 

@@ -1,9 +1,10 @@
 using System.Collections;
 using UnityEngine;
+using Unity.Cinemachine;
 
 public class ShotgunScript : WeaponScript
 {
-
+    //Damage 20;
 
     public float bulletSpeed = 40f;
     private bool canFire = true;
@@ -23,7 +24,8 @@ public class ShotgunScript : WeaponScript
     public bool scopedIn = false;
     [HideInInspector]
     public float zoomPercent = 60;
-    private Camera mainCamera;
+    [SerializeField]
+    private CinemachineCamera mainCamera;
     private Animator anim;
     [HideInInspector]
     public bool animToggle = true;      //Called from animation player
@@ -40,19 +42,21 @@ public class ShotgunScript : WeaponScript
 
     private void Start()
     {
-        mainCamera = Camera.main.GetComponent<Camera>();
         anim = GetComponent<Animator>();
         particles = barrel.GetChild(0).GetComponent<ParticleSystem>();
         gunLight = barrel.GetChild(1).gameObject;
 
         currentAmmo = 5;
         holdingAmmo = 18;
+
     }
 
     void Update()
     {
         GetInput();
-        mainCamera.fieldOfView = zoomPercent;
+
+
+        mainCamera.Lens.FieldOfView = zoomPercent; //Currently broken, need to unparent Third Person Aim Camera from Main Camera object
     }
 
     private void GetInput()
@@ -200,11 +204,11 @@ public class ShotgunScript : WeaponScript
 
     public void ZoomOut()
     {
-        mainCamera.fieldOfView = 60;
+        mainCamera.Lens.FieldOfView = 60;
     }
     public void ZoomIn()
     {
-        mainCamera.fieldOfView = 50;
+        mainCamera.Lens.FieldOfView = 50;
     }
 
     private IEnumerator WaitForPump() //Delay before next shot
