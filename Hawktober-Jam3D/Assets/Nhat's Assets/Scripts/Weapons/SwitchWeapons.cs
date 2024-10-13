@@ -7,6 +7,8 @@ public class SwitchWeapons : MonoBehaviour
     [SerializeField]
     private GameObject[] weapons;
 
+    public LayerMask monsterLayer;
+
     [SerializeField]
     private UIScript uiScript;
 
@@ -31,8 +33,7 @@ public class SwitchWeapons : MonoBehaviour
     private void Update()
     {
         GetInput();
-
-        
+        ChangeTargetByDistance();
     }
     private void GetInput()
     {
@@ -82,7 +83,23 @@ public class SwitchWeapons : MonoBehaviour
 
 
 
-
+    //****Should be put into a seperate script, but for convience just left on this script attached to mainCamera
+    private void ChangeTargetByDistance()
+    {
+        Collider[] coll = Physics.OverlapSphere(transform.position, 6, monsterLayer);
+        bool rayHit = Physics.Raycast(transform.position, transform.forward, 20f, monsterLayer);
+        if (coll.Length != 0 && rayHit) //If looking at target and target is in radius of 6, change shot target to closeTarget
+        {
+            weapons[0].GetComponent<ShotgunScript>().IsCloseToMonster = true;
+            weapons[1].GetComponent<GunScript>().IsCloseToMonster = true;
+            Debug.Log("ray hit");
+        }
+        else
+        {
+            weapons[0].GetComponent<ShotgunScript>().IsCloseToMonster = false;
+            weapons[1].GetComponent<GunScript>().IsCloseToMonster = false;
+        }
+    }
 
 
     //****Temporary Fix... Called from animation event for gun reload functions**** Unable to call gunscript events from mainCamera animationplayer

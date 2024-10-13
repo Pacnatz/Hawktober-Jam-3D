@@ -13,6 +13,11 @@ public class ShotgunScript : WeaponScript
     [SerializeField]
     private Transform target;
     [SerializeField]
+    private Transform closeTarget;
+    [HideInInspector]
+    public bool IsCloseToMonster;
+
+    [SerializeField]
     private Transform barrel;
     [SerializeField]
     private GameObject bulletPrefab;
@@ -69,7 +74,16 @@ public class ShotgunScript : WeaponScript
 
             for (int i = 0; i < bulletAmount; i++)
             {
-                Vector3 direction = target.position - barrel.position;
+                Vector3 direction;
+                if (scopedIn)
+                {
+                    direction = target.position - barrel.position;
+                }
+                else
+                {
+                    if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
+                    else direction = target.position - barrel.position;
+                }
                 direction.Normalize();
 
                 Vector3 offset = GenerateOffSet();

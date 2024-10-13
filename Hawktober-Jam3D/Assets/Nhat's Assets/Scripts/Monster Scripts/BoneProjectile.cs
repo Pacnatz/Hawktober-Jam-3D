@@ -34,7 +34,7 @@ public class BoneProjectile : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
-            Debug.Log("Hit");
+            Destroy(gameObject);
         }
     }
 }

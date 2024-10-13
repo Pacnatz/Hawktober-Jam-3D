@@ -12,6 +12,11 @@ public class GunScript : WeaponScript
     [SerializeField]
     private Transform target;
     [SerializeField]
+    private Transform closeTarget;
+    [HideInInspector]
+    public bool IsCloseToMonster;
+
+    [SerializeField]
     private Transform barrel;
     [SerializeField]
     private GameObject bulletPrefab;
@@ -56,7 +61,16 @@ public class GunScript : WeaponScript
             currentAmmo--;
 
 
-            Vector3 direction = target.position - barrel.position;
+            Vector3 direction;
+            if (scopedIn)
+            {
+                direction = target.position - barrel.position;
+            }
+            else
+            {
+                if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
+                else direction = target.position - barrel.position;
+            }
             direction.Normalize();
 
             Vector3 offset = GenerateOffSet();
@@ -152,7 +166,7 @@ public class GunScript : WeaponScript
         }
         else
         {
-            return new Vector3(Random.Range(-0.06f, .04f), Random.Range(-0.04f, 0.06f), 0);
+            return new Vector3(Random.Range(-0.02f, .02f), Random.Range(-0.02f, 0.02f), 0);
         }
     }
 

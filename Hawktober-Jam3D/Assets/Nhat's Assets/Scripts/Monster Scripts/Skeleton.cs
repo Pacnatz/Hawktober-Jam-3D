@@ -1,12 +1,14 @@
+using System.Collections;
 using UnityEngine;
 
 public class Skeleton : Monster
 {
-    //health = 100
+    public float Health = 100;
     public float WalkRange = 16;
     public float AttackRange = 9;
     public float BackUpRange = 5;
 
+    public GameObject[] BodyParts;
 
     [SerializeField]
     private Animator topAnim;
@@ -18,8 +20,7 @@ public class Skeleton : Monster
     private bool isSpawning; //Spawn time ~2.5s
 
     private bool isActive = false;
-    private bool isAttacking = false;
-    private bool attackingHasRun = false;
+    private bool isDead = false;
 
     private bool InWalkRange = false;
     private bool InAttackRange = false;
@@ -28,21 +29,20 @@ public class Skeleton : Monster
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
+        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ |
+                            RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         player = FindAnyObjectByType<PlayerMove>().transform;
+
+        Spawn();
     }
 
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.G))
-        {
-            Spawn();
-        }
 
         if (isSpawning)
         {
             transform.position += Vector3.up * Time.deltaTime;
-            if (transform.position.y > .5)
+            if (transform.position.y > .5 && !isDead)
             {
                 isSpawning = false;
                 isActive = true;
@@ -76,7 +76,7 @@ public class Skeleton : Monster
                 else
                 {
                     bottomAnim.Play("Idle");
-                    
+
                     rb.linearVelocity = Vector3.zero;
                 }
             }
@@ -94,26 +94,57 @@ public class Skeleton : Monster
                 topAnim.Play("Idle");
                 bottomAnim.Play("Idle");
             }
-            
-            
+
+
         }
 
+        if (Input.GetKeyDown(KeyCode.H))
+        {
+            Health = 0;
+            Debug.Log(Random.Range(-1, 2));
+        }
+        //Death
+        if (Health <= 0)
+        {
+            if (!isDead)
+            {
+                isDead = true;
+                Die();
+            }
+        }
     }
 
     private void Spawn()
     {
         isSpawning = true;
         isActive = false;
-        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
-        transform.localPosition = Vector3.zero;
+        rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ | 
+                            RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationY;
         topAnim.Play("Spawn");
         bottomAnim.Play("Spawn");
     }
 
-
-    public void ThrowBone() //Called from top anim player
+    private void Die()
     {
+        isActive = false;
 
+        Destroy(GetComponent<CapsuleCollider>());
+        Destroy(topAnim);
+        Destroy(bottomAnim);
+        Destroy(rb);
+        foreach (GameObject part in BodyParts)
+        {
+            part.AddComponent<Rigidbody>();
+            part.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-20, 21), Random.Range(0, 301), Random.Range(-20, 21)));
+            part.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(-20, 21), Random.Range(-20, 21), Random.Range(-20, 21)));
+            StartCoroutine(Despawn());
+        }
     }
 
+    private IEnumerator Despawn()
+    {
+        float despawnTime = 2.5f;
+        yield return new WaitForSeconds(despawnTime);
+        Destroy(gameObject);
+    }
 }
