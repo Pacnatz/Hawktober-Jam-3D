@@ -2,10 +2,13 @@ using UnityEngine;
 
 public class MonsterSpawner : MonoBehaviour
 {
+    public WaveManager WaveManagerScript;
     public GameObject[] spawnLocations;
     public GameObject skeletonPrefab;
-
-
+    [HideInInspector]
+    public bool canSpawn = false;
+    [HideInInspector]
+    public float spawnDelay = 10f;
     private float timer = 2f;
 
     private void Update()
@@ -14,11 +17,23 @@ public class MonsterSpawner : MonoBehaviour
 
         if (timer <= 0)
         {
-            timer = 10f;
+            SpawnMonster();
+        }
+    }
 
-            GameObject spawnLoc = spawnLocations[Random.Range(0, spawnLocations.Length - 1)];
+    private void SpawnMonster()
+    {
+        canSpawn = true;
+        timer = spawnDelay;
 
-            GameObject skele = Instantiate(skeletonPrefab, spawnLoc.transform.localPosition, spawnLoc.transform.localRotation);
+        GameObject spawnLoc = spawnLocations[Random.Range(0, spawnLocations.Length - 1)];
+
+        if (WaveManagerScript.currentWave.Count > 0)
+        {
+            GameObject monsterToSpawn = WaveManagerScript.currentWave[0];
+            WaveManagerScript.currentWave.Remove(monsterToSpawn);
+
+            GameObject skele = Instantiate(monsterToSpawn, spawnLoc.transform.localPosition, spawnLoc.transform.localRotation);
         }
     }
 
