@@ -15,6 +15,9 @@ public class Skeleton : Monster
     [SerializeField]
     private Animator bottomAnim;
 
+    [SerializeField]
+    private MonsterSpawner spawnScript;
+
     private Transform player;
     private Rigidbody rb;
     private bool isSpawning; //Spawn time ~2.5s
@@ -22,9 +25,15 @@ public class Skeleton : Monster
     private bool isActive = false;
     private bool isDead = false;
 
-    private bool InWalkRange = false;
-    private bool InAttackRange = false;
-    private bool InBackUpRange = false;
+    private bool inWalkRange = false;
+    private bool inAttackRange = false;
+    private bool inBackUpRange = false;
+
+    //Target Code Variables
+    private bool isTargetWalking = false;
+    private float targetTimer = 1f;
+    private Vector3 targetLoc;
+    
 
     void Start()
     {
@@ -32,12 +41,14 @@ public class Skeleton : Monster
         rb.constraints = RigidbodyConstraints.FreezePositionY | RigidbodyConstraints.FreezePositionX | RigidbodyConstraints.FreezePositionZ |
                             RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ;
         player = FindAnyObjectByType<PlayerMove>().transform;
+        spawnScript = FindAnyObjectByType<MonsterSpawner>();
 
         Spawn();
     }
 
     void Update()
     {
+
 
         if (isSpawning)
         {
@@ -50,9 +61,9 @@ public class Skeleton : Monster
         }
 
         //Get range booleans
-        InWalkRange = (Vector3.Distance(player.position, transform.position) < WalkRange);
-        InAttackRange = (Vector3.Distance(player.position, transform.position) < AttackRange);
-        InBackUpRange = (Vector3.Distance(player.position, transform.position) < BackUpRange);
+        inWalkRange = (Vector3.Distance(player.position, transform.position) < WalkRange);
+        inAttackRange = (Vector3.Distance(player.position, transform.position) < AttackRange);
+        inBackUpRange = (Vector3.Distance(player.position, transform.position) < BackUpRange);
 
 
 
@@ -61,14 +72,14 @@ public class Skeleton : Monster
             rb.constraints = RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezePositionY;
             //Need to relearn state machines... no time
 
-            if (InAttackRange)
+            if (inAttackRange)
             {
                 //Attack Code
 
                 topAnim.Play("Attack");
 
                 transform.LookAt(new Vector3(player.position.x, .5f, player.position.z));
-                if (InBackUpRange)
+                if (inBackUpRange)
                 {
                     rb.linearVelocity = -transform.forward;
                     bottomAnim.Play("WalkBack");
@@ -80,29 +91,60 @@ public class Skeleton : Monster
                     rb.linearVelocity = Vector3.zero;
                 }
             }
-            else if (InWalkRange)
+            else if (inWalkRange)
             {
+                if (!topAnim.GetCurrentAnimatorStateInfo(0).IsName("Attack")) //Continues Attacking
+                {
+                    topAnim.Play("Walk");
+                }
                 //Walk towards player
-                topAnim.Play("Walk");
                 bottomAnim.Play("Walk");
                 transform.LookAt(new Vector3(player.position.x, .5f, player.position.z));
                 rb.linearVelocity = transform.forward * 2;
+                isTargetWalking = false;
             }
-            else
+            else //TargetCode
             {
-                //Add target code
-                topAnim.Play("Idle");
-                bottomAnim.Play("Idle");
+                
+                if (isTargetWalking)
+                {
+                    //Walk towards target
+                    topAnim.Play("Walk");
+                    bottomAnim.Play("Walk");
+                    transform.LookAt(targetLoc);
+                    rb.linearVelocity = transform.forward * 2;
+
+                    if (Vector3.Distance(transform.position, targetLoc) < .2f)
+                    {
+                        isTargetWalking = false;
+                        targetTimer = 1f;
+                        topAnim.Play("Idle");
+                        bottomAnim.Play("Idle");
+                    }
+                }
+                else
+                {
+                    targetTimer -= Time.deltaTime;
+                    rb.linearVelocity = Vector3.zero;
+                    if (targetTimer <= 0) //Every second chooses random action between stay or walk towards target vector
+                    {
+                        targetTimer = 1f;
+                        if (Random.Range(0, 4) == 0)
+                        {
+                            isTargetWalking = true;
+                            targetLoc = GetTargetLocation();
+                            
+                        }
+                        else
+                        {
+                            topAnim.Play("Idle");
+                            bottomAnim.Play("Idle");
+                        }
+                    }
+                }
             }
-
-
         }
 
-        if (Input.GetKeyDown(KeyCode.H))
-        {
-            Health = 0;
-            Debug.Log(Random.Range(-1, 2));
-        }
         //Death
         if (Health <= 0)
         {
@@ -128,6 +170,9 @@ public class Skeleton : Monster
     {
         isActive = false;
 
+        //Remove from current enemy list in MonsterSpawner
+        spawnScript.CurrentEnemies.Remove(gameObject);
+
         Destroy(GetComponent<CapsuleCollider>());
         Destroy(topAnim);
         Destroy(bottomAnim);
@@ -137,14 +182,18 @@ public class Skeleton : Monster
             part.AddComponent<Rigidbody>();
             part.GetComponent<Rigidbody>().AddForce(new Vector3(Random.Range(-20, 21), Random.Range(0, 301), Random.Range(-20, 21)));
             part.GetComponent<Rigidbody>().AddTorque(new Vector3(Random.Range(-20, 21), Random.Range(-20, 21), Random.Range(-20, 21)));
-            StartCoroutine(Despawn());
+            Destroy(gameObject, 2.5f);
         }
     }
 
-    private IEnumerator Despawn()
+    private Vector3 GetTargetLocation()
     {
-        float despawnTime = 2.5f;
-        yield return new WaitForSeconds(despawnTime);
-        Destroy(gameObject);
+        float targetX = transform.position.x + Random.Range(-5.0f, 5.0f); //Target range
+        float targetZ = transform.position.z + Random.Range(-5.0f, 5.0f);
+        targetX = Mathf.Clamp(targetX, -19.5f, 19.5f); //Map size
+        targetZ = Mathf.Clamp(targetZ, -19.5f, 19.5f);
+
+        return new Vector3(targetX, .5f, targetZ);
     }
+
 }

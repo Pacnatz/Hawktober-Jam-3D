@@ -1,25 +1,21 @@
-using System.Collections;
 using UnityEngine;
+using System.Collections;
 
 public class BulletScript : MonoBehaviour
 { 
-    public float BulletKillTime = 1f;
+    public float BulletKillTime = 1.2f;
 
     private Rigidbody rb;
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        StartCoroutine(DestroyBullet());
+        Destroy(gameObject, BulletKillTime);
     }
 
-    // Update is called once per frame
-    void Update()
-    { 
-    }
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.layer == LayerMask.NameToLayer("Floor")) //If collision is in Floor layer wwwwwww
+        if (other.gameObject.layer == LayerMask.NameToLayer("Floor")) //If collision is in Floor layer
         {
             Destroy(gameObject);
         }
@@ -29,15 +25,8 @@ public class BulletScript : MonoBehaviour
             Skeleton skeleScript = other.gameObject.GetComponent<Skeleton>();
 
             skeleScript.Health -= 30f;
-
-            Debug.Log("hit " + skeleScript.gameObject.name);
             Destroy(gameObject);
         }
     }
 
-    private IEnumerator DestroyBullet()
-    {
-        yield return new WaitForSeconds(BulletKillTime);
-        Destroy(gameObject);
-    }
 }

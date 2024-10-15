@@ -7,7 +7,8 @@ public class BoneProjectile : MonoBehaviour
     private Rigidbody rb;
     private Transform player;
     private Vector3 direction;
-    private float moveSpeed = 10;
+
+    public float moveSpeed = 10;
 
     void Start()
     {

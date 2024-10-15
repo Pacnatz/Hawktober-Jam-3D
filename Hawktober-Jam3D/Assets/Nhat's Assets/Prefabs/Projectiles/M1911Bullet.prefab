@@ -150,3 +150,4 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   BulletKillTime: 1.2
+  testCube: {fileID: 2756911986576434097, guid: ca9a2aea78f616a46a3ecc50e2d0ce54, type: 3}
