@@ -5,6 +5,8 @@ public class ShotgunAmmoBox : AmmoBox
 
     ShotgunScript shotgunScript;
 
+    private const int MAX_SHOTGUN_AMMO = 96;
+
     private void Start()
     {
         shotgunScript = Camera.main.transform.Find("ShotGun").GetComponent<ShotgunScript>();
@@ -17,9 +19,10 @@ public class ShotgunAmmoBox : AmmoBox
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            if (!floatingUp)
+            if (!floatingUp && shotgunScript.holdingAmmo < MAX_SHOTGUN_AMMO)
             {
                 shotgunScript.holdingAmmo += 12;
+                shotgunScript.holdingAmmo = Mathf.Clamp(shotgunScript.holdingAmmo, 0, MAX_SHOTGUN_AMMO);
                 Destroy(gameObject);
             }
         }

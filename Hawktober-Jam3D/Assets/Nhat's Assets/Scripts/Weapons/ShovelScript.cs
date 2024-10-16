@@ -19,11 +19,16 @@ public class ShovelScript : WeaponScript
 
     private bool isDiggable;
 
+    [HideInInspector]
+    public GameObject selectedMonster;
+    private float meleeDamage = 20;
 
+    private UIScript uiScript;
     private void Start()
     {
         anim = GetComponent<Animator>();
         mainCamera = Camera.main.transform;
+        uiScript = FindAnyObjectByType<UIScript>();
     }
     private void Update()
     {
@@ -59,7 +64,7 @@ public class ShovelScript : WeaponScript
         }
         else
         {
-            playerScript.cameraSensitivity = 500f;
+            playerScript.cameraSensitivity = uiScript.sensitivitySlider.value; //Resets it back to adjusted sensitivity
             playerScript.movementSpeed = 6f;
         }
     }
@@ -80,6 +85,19 @@ public class ShovelScript : WeaponScript
     public void PlayDirtAnimation() //Called from event from animator
     {
         selectedGraveDirt.PlayAnimation();
+    }
+
+    public void HitEnemy()
+    {
+        if (selectedMonster != null)
+        {
+            selectedMonster.TryGetComponent<Skeleton>(out var skeleScript);
+            if (skeleScript)
+            {
+                skeleScript.Health -= meleeDamage;
+            }
+        }
+        
     }
 
     public override void Activate() //Inherited from weaponscript

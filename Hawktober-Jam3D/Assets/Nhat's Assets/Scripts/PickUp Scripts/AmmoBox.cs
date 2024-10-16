@@ -13,6 +13,8 @@ public class AmmoBox : MonoBehaviour
     protected bool floatingUp = true;
     protected ParticleSystem particles;
 
+    private const int MAX_M1911_AMMO = 192;
+
     void Start()
     {
         endPos = transform.position + new Vector3(0, 1.2f, 0);
@@ -39,12 +41,14 @@ public class AmmoBox : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
-            if (!floatingUp)
+            if (!floatingUp && gunScript.holdingAmmo < MAX_M1911_AMMO)
             {
                 //Add code for ammo update here.
                 gunScript.holdingAmmo += 24;
+                gunScript.holdingAmmo = Mathf.Clamp(gunScript.holdingAmmo, 0, MAX_M1911_AMMO);
                 Destroy(gameObject);
             }
         }
+        Instantiate(gunScript, Vector3.zero.normalized, Quaternion.identity)
     }
 }

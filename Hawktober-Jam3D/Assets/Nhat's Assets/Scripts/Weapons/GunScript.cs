@@ -27,7 +27,7 @@ public class GunScript : WeaponScript
     public bool scopedIn = false;
     private Animator anim;
     [HideInInspector]
-    public bool animToggle = true; 
+    public bool animToggle = true;
     private ParticleSystem particles;
     private GameObject gunLight;
 
@@ -40,12 +40,20 @@ public class GunScript : WeaponScript
 
     private UIScript uiScript;
 
+    //Audio Variables
+    private AudioSource reloadAudio;
+    private AudioSource shootAudio;
+
+
+
     private void Start()
     {
         anim = mainCamera.GetComponent<Animator>();
         particles = barrel.GetChild(0).GetComponent<ParticleSystem>();
         gunLight = barrel.GetChild(1).gameObject;
         uiScript = FindAnyObjectByType<UIScript>();
+        reloadAudio = transform.Find("ReloadSound").GetComponent<AudioSource>();
+        shootAudio = transform.Find("ShootSound").GetComponent<AudioSource>();
     }
 
     void Update()
@@ -56,10 +64,12 @@ public class GunScript : WeaponScript
     private void GetInput()
     {
         //Left Mouse button
-        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle)
+        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle && !uiScript.isPaused)
         {
             currentAmmo--;
 
+            shootAudio.pitch = Random.Range(.9f, a);
+            shootAudio.Play();
 
             Vector3 direction;
             if (scopedIn)
@@ -92,7 +102,7 @@ public class GunScript : WeaponScript
             gunLight.SetActive(true);
             StartCoroutine(TurnOffLight(.1f));
 
-            
+
         }
         //Right mouse button
         if (Input.GetMouseButtonDown(1))
@@ -109,7 +119,7 @@ public class GunScript : WeaponScript
         }
         if (Input.GetMouseButtonUp(1))
         {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Scope") || 
+            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Scope") ||
                 anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedIn") ||
                 anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire") && animToggle) //If either scope or scopedIn is playing
             {
@@ -147,6 +157,12 @@ public class GunScript : WeaponScript
             currentAmmo = holdingAmmo;
             holdingAmmo = 0;
         }
+    }
+    public void PlayReloadAudio()
+    {
+        reloadAudio.pitch = Random.Range(.9f, 1.1f);
+        reloadAudio.Play();
+
     }
     public void ScopeIn() //Called from switch weapons
     {

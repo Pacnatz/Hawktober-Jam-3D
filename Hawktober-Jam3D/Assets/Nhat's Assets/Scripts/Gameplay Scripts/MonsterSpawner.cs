@@ -13,6 +13,7 @@ public class MonsterSpawner : MonoBehaviour
     private float spawnDelay = 10f;
     private float throwSpeed = 1f;
     private float boneSpeed = 40f;
+    private float skeleHealth = 100f;
 
 
     [HideInInspector]
@@ -36,6 +37,8 @@ public class MonsterSpawner : MonoBehaviour
 
         StartCoroutine(StartGame());
     }
+
+
 
     private void Update()
     {
@@ -75,7 +78,12 @@ public class MonsterSpawner : MonoBehaviour
         GameObject monsterToSpawn = currentWave[currentIndex];
         GameObject monster = Instantiate(monsterToSpawn, spawnLoc.transform.localPosition, spawnLoc.transform.localRotation);
 
-
+        //Access skeleton health
+        monster.transform.TryGetComponent<Skeleton>(out var skeleton);
+        if (skeleton)
+        {
+            skeleton.Health = skeleHealth;
+        }
         //Check if this monster has skeletonAttack script
         monster.transform.GetChild(0).TryGetComponent<SkeletonAttack>(out var skeletonAttack);
         if (skeletonAttack)

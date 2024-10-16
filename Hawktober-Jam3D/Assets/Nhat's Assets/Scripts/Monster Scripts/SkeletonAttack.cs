@@ -23,7 +23,6 @@ public class SkeletonAttack : MonoBehaviour
         {
             topAnim.SetFloat("ThrowSpeed", throwSpeed);
         }
-        Debug.Log(throwSpeed);
         
     }
 

@@ -17,8 +17,14 @@ public class SwitchWeapons : MonoBehaviour
     private GameObject currentWeapon;
     private bool isSwitchingWeapon = false;
 
+    [HideInInspector]
+    public float AudioVolume = 1f;
+    private AudioListener audioListener; //Adjusted from UI Volume Slider
+
     private void Start()
     {
+        audioListener = GetComponent<AudioListener>();
+
         currentWeapon = weapons[2]; //Start with shovel
         StartCoroutine(DrawWeapon(currentWeapon));
 
@@ -27,13 +33,14 @@ public class SwitchWeapons : MonoBehaviour
         {
             weapon.SetActive(true);
         }
-
     }
 
     private void Update()
     {
+        AudioListener.volume = AudioVolume;
+
         GetInput();
-        ChangeTargetByDistance();
+        ChangeTargetByDistance(); //Changes firing target in relation to enemy distance
     }
     private void GetInput()
     {
@@ -86,9 +93,9 @@ public class SwitchWeapons : MonoBehaviour
     //****Should be put into a seperate script, but for convience just left on this script attached to mainCamera
     private void ChangeTargetByDistance()
     {
-        Collider[] coll = Physics.OverlapSphere(transform.position, 7, monsterLayer);
+        Collider[] coll = Physics.OverlapSphere(transform.position, 6.5f, monsterLayer);
         bool rayHit = Physics.Raycast(transform.position, transform.forward, 20f, monsterLayer);
-        if (coll.Length != 0 && rayHit) //If looking at target and target is in radius of 7, change shot target to closeTarget
+        if (coll.Length != 0 && rayHit) //If looking at target and target is in radius of 6.5, change shot target to closeTarget
         {
             weapons[0].GetComponent<ShotgunScript>().IsCloseToMonster = true;
             weapons[1].GetComponent<GunScript>().IsCloseToMonster = true;
@@ -118,5 +125,9 @@ public class SwitchWeapons : MonoBehaviour
     public void ScopedIn()
     {
         weapons[1].GetComponent<GunScript>().ScopeIn();
+    }
+    public void PlayReloadAudio()
+    {
+        weapons[1].GetComponent<GunScript>().PlayReloadAudio();
     }
 }

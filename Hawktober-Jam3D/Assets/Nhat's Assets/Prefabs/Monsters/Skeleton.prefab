@@ -1076,7 +1076,7 @@ CapsuleCollider:
   m_ProvidesContacts: 0
   m_Enabled: 1
   serializedVersion: 2
-  m_Radius: 0.3
+  m_Radius: 0.33
   m_Height: 2.2
   m_Direction: 1
   m_Center: {x: 0, y: 1.55, z: -0.15}
@@ -1139,6 +1139,7 @@ MonoBehaviour:
   - {fileID: 2130509655865024076}
   topAnim: {fileID: 5124825222664877443}
   bottomAnim: {fileID: 5906069409163352865}
+  spawnScript: {fileID: 0}
 --- !u!1 &7370674787290816519
 GameObject:
   m_ObjectHideFlags: 0

@@ -8,7 +8,7 @@ public class PlayerMove : MonoBehaviour
     [SerializeField]
     private float jumpForce = 5;
     [SerializeField]
-    public float cameraSensitivity = 500f; //Can be updated by shovel script
+    public float cameraSensitivity = 500f; //Updated by UI Sensitivity Slider
     [SerializeField]
     private LayerMask groundLayer;
     [SerializeField]
@@ -35,7 +35,6 @@ public class PlayerMove : MonoBehaviour
         RotatePlayer();
         CheckFloor();
         Jump();
-        
     }
     private void Move()
     {

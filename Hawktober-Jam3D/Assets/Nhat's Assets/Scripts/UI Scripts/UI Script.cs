@@ -1,10 +1,12 @@
 using UnityEngine;
+using UnityEngine.SceneManagement;
+using UnityEngine.UI;
 using TMPro;
+using System;
 using System.Collections;
 
 public class UIScript : MonoBehaviour
 {
-    
 
     private Vector3 activeContainerPosition = new Vector3(200, 150, 0);
     private Vector3 inactiveContainerPosition = new Vector3(-300, 150, 0);
@@ -25,6 +27,9 @@ public class UIScript : MonoBehaviour
     public ShotgunScript shotgunScript;
     private Vector3 shotgunVelocity = Vector3.zero;
 
+    [HideInInspector]
+    public int ammoArrayPosition;
+
     //Wave Container
     public RectTransform waveContainer;
     private TMP_Text waveTMPro;
@@ -35,18 +40,29 @@ public class UIScript : MonoBehaviour
     public bool ShowWave = false;
     private float waveShowTime = 2f;
     private float timer = 2f;
+
     
 
-
-
+    //Menu variables
+    public GameObject PauseMenu;
     [HideInInspector]
-    public int ammoArrayPosition;
+    public bool isPaused = false;
+    public GameObject SettingsMenu;
+    public Slider sensitivitySlider;
+    public Slider audioSlider;
+
+
+    private PlayerMove player;
+    private SwitchWeapons switchWeaponsScript;
 
     void Start()
     {
+
         gunTMPro = gunContainer.GetChild(0).GetComponent<TMP_Text>();
         shotgunTMPro = shotgunContainer.GetChild(0).GetComponent<TMP_Text>();
         waveTMPro = waveContainer.GetChild(0).GetComponent<TMP_Text>();
+        player = FindAnyObjectByType<PlayerMove>();
+        switchWeaponsScript = FindAnyObjectByType<SwitchWeapons>();
         ammoArrayPosition = 2;
     }
     void Update()
@@ -94,6 +110,19 @@ public class UIScript : MonoBehaviour
         gunTMPro.text = $"{gunScript.currentAmmo}/{gunScript.holdingAmmo}";
         shotgunTMPro.text = $"{shotgunScript.currentAmmo}/{shotgunScript.holdingAmmo}";
         waveTMPro.text = $"WAVE {spawnScript.wave}";
+
+        //Pause game
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!isPaused)
+            {
+                isPaused = true;
+                PauseMenu.SetActive(true);
+                Cursor.visible = true;
+                Cursor.lockState = CursorLockMode.None;
+                Time.timeScale = 0;
+            }
+        }
     }
 
     private void HideGunContainer()
@@ -107,5 +136,42 @@ public class UIScript : MonoBehaviour
                     inactiveContainerPosition, ref shotgunVelocity, containerMoveSpeed * Time.deltaTime);
     }
 
+
+    public void ResumeGame()
+    {
+        isPaused = false;
+        PauseMenu.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
+    }
+
+    public void ShowSettings()
+    {
+        PauseMenu.SetActive(false);
+        SettingsMenu.SetActive(true);
+    }
+
+    public void SensitivitySlider()
+    {
+        player.cameraSensitivity = sensitivitySlider.value;
+    }
+
+    public void VolumeSlider()
+    {
+        switchWeaponsScript.AudioVolume = audioSlider.value;
+    }
+
+    public void HideSettings()
+    {
+        PauseMenu.SetActive(true);
+        SettingsMenu.SetActive(false);
+    }
+
+    public void MainMenu()
+    {
+        ResumeGame();
+        SceneManager.LoadScene("MainMenu");
+    }
     
 }
