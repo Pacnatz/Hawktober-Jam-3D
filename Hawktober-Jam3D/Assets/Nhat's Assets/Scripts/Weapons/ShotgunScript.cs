@@ -9,13 +9,12 @@ public class ShotgunScript : WeaponScript
     public float bulletSpeed = 40f;
     private bool canFire = true;
 
-
+    [SerializeField]
+    private LayerMask monsterLayer;
     [SerializeField]
     private Transform target;
     [SerializeField]
     private Transform closeTarget;
-    [HideInInspector]
-    public bool IsCloseToMonster;
 
     [SerializeField]
     private Transform barrel;
@@ -81,8 +80,17 @@ public class ShotgunScript : WeaponScript
                 }
                 else
                 {
-                    if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
-                    else direction = target.position - barrel.position;
+                    if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit monster, 500f, monsterLayer))
+                    {
+                        direction = new Vector3(monster.point.x, monster.point.y, monster.point.z) - barrel.position;
+                    }
+                    else
+                    {
+                        direction = target.position - barrel.position;
+                    }
+                    //Deprecated
+                    //if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
+                    //else direction = target.position - barrel.position;
                 }
                 direction.Normalize();
 
@@ -197,7 +205,7 @@ public class ShotgunScript : WeaponScript
         }
         else
         {
-            return new Vector3(Random.Range(-0.09f, .06f), Random.Range(-0.06f, 0.09f), Random.Range(-0.09f, 0.06f));
+            return new Vector3(Random.Range(-0.08f, .08f), Random.Range(-0.08f, 0.08f), Random.Range(-0.08f, 0.08f));
         }
     }
 

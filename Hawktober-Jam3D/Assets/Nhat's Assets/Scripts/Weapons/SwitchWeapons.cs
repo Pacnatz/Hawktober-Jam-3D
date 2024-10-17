@@ -40,7 +40,6 @@ public class SwitchWeapons : MonoBehaviour
         AudioListener.volume = AudioVolume;
 
         GetInput();
-        ChangeTargetByDistance(); //Changes firing target in relation to enemy distance
     }
     private void GetInput()
     {
@@ -90,22 +89,6 @@ public class SwitchWeapons : MonoBehaviour
 
 
 
-    //****Should be put into a seperate script, but for convience just left on this script attached to mainCamera
-    private void ChangeTargetByDistance()
-    {
-        Collider[] coll = Physics.OverlapSphere(transform.position, 6.5f, monsterLayer);
-        bool rayHit = Physics.Raycast(transform.position, transform.forward, 20f, monsterLayer);
-        if (coll.Length != 0 && rayHit) //If looking at target and target is in radius of 6.5, change shot target to closeTarget
-        {
-            weapons[0].GetComponent<ShotgunScript>().IsCloseToMonster = true;
-            weapons[1].GetComponent<GunScript>().IsCloseToMonster = true;
-        }
-        else
-        {
-            weapons[0].GetComponent<ShotgunScript>().IsCloseToMonster = false;
-            weapons[1].GetComponent<GunScript>().IsCloseToMonster = false;
-        }
-    }
 
 
     //****Temporary Fix... Called from animation event for gun reload functions**** Unable to call gunscript events from mainCamera animationplayer

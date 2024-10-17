@@ -8,13 +8,13 @@ public class GunScript : WeaponScript
     public float bulletSpeed = 40f;
 
     [SerializeField]
+    private LayerMask monsterLayer;
+    [SerializeField]
     private Camera mainCamera;
     [SerializeField]
     private Transform target;
     [SerializeField]
     private Transform closeTarget;
-    [HideInInspector]
-    public bool IsCloseToMonster;
 
     [SerializeField]
     private Transform barrel;
@@ -68,7 +68,7 @@ public class GunScript : WeaponScript
         {
             currentAmmo--;
 
-            shootAudio.pitch = Random.Range(.9f, a);
+            shootAudio.pitch = Random.Range(.9f, 1.1f);
             shootAudio.Play();
 
             Vector3 direction;
@@ -78,8 +78,17 @@ public class GunScript : WeaponScript
             }
             else
             {
-                if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
-                else direction = target.position - barrel.position;
+                if (Physics.Raycast(mainCamera.transform.position, mainCamera.transform.forward, out RaycastHit monster, 500f, monsterLayer))
+                {
+                    direction = new Vector3(monster.point.x, monster.point.y, monster.point.z) - barrel.position;
+                }
+                else
+                {
+                    direction = target.position - barrel.position;
+                }
+                //Old code, updated to use hitscan
+                //if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
+                //else direction = target.position - barrel.position;
             }
             direction.Normalize();
 
@@ -131,6 +140,7 @@ public class GunScript : WeaponScript
         //Reload
         if (Input.GetKeyDown(KeyCode.R) && currentAmmo < 8 && holdingAmmo > 0)
         {
+            scopedIn = false;
             anim.Play("Reload");
         }
 

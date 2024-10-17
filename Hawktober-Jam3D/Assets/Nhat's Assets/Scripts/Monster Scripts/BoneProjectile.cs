@@ -3,20 +3,22 @@ using UnityEngine;
 
 public class BoneProjectile : MonoBehaviour
 {
+    public float Damage = 10;
+    public float moveSpeed = 10;
 
     private Rigidbody rb;
-    private Transform player;
+    private Player player;
     private Vector3 direction;
 
-    public float moveSpeed = 10;
+    
 
     void Start()
     {
         StartCoroutine(Despawn());
         rb = GetComponent<Rigidbody>();
-        player = FindAnyObjectByType<PlayerMove>().transform;
+        player = FindAnyObjectByType<Player>();
 
-        direction = (player.position + Vector3.up) - transform.position;
+        direction = (player.transform.position + Vector3.up) - transform.position;
         rb.linearVelocity = direction.normalized * moveSpeed;
     }
 
@@ -35,6 +37,7 @@ public class BoneProjectile : MonoBehaviour
     {
         if (collision.gameObject.name == "Player")
         {
+            player.Health -= Damage;
             Destroy(gameObject);
         }
     }

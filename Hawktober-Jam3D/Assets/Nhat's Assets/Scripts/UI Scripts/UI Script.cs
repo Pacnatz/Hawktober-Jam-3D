@@ -52,7 +52,9 @@ public class UIScript : MonoBehaviour
     public Slider audioSlider;
 
 
-    private PlayerMove player;
+    private PlayerMove playerMove;
+    private Player player;
+    public Slider playerHealthSlider;
     private SwitchWeapons switchWeaponsScript;
 
     void Start()
@@ -61,7 +63,8 @@ public class UIScript : MonoBehaviour
         gunTMPro = gunContainer.GetChild(0).GetComponent<TMP_Text>();
         shotgunTMPro = shotgunContainer.GetChild(0).GetComponent<TMP_Text>();
         waveTMPro = waveContainer.GetChild(0).GetComponent<TMP_Text>();
-        player = FindAnyObjectByType<PlayerMove>();
+        playerMove = FindAnyObjectByType<PlayerMove>();
+        player = FindAnyObjectByType<Player>();
         switchWeaponsScript = FindAnyObjectByType<SwitchWeapons>();
         ammoArrayPosition = 2;
     }
@@ -111,6 +114,9 @@ public class UIScript : MonoBehaviour
         shotgunTMPro.text = $"{shotgunScript.currentAmmo}/{shotgunScript.holdingAmmo}";
         waveTMPro.text = $"WAVE {spawnScript.wave}";
 
+        playerHealthSlider.value = player.Health / 100;
+        
+
         //Pause game
         if (Input.GetKeyDown(KeyCode.Escape))
         {
@@ -154,7 +160,7 @@ public class UIScript : MonoBehaviour
 
     public void SensitivitySlider()
     {
-        player.cameraSensitivity = sensitivitySlider.value;
+        playerMove.cameraSensitivity = sensitivitySlider.value;
     }
 
     public void VolumeSlider()

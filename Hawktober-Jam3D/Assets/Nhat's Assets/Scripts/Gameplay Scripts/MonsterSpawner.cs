@@ -13,6 +13,7 @@ public class MonsterSpawner : MonoBehaviour
     private float spawnDelay = 10f;
     private float throwSpeed = 1f;
     private float boneSpeed = 40f;
+    private float boneDamage = 5f;
     private float skeleHealth = 100f;
 
 
@@ -90,6 +91,7 @@ public class MonsterSpawner : MonoBehaviour
         {
             skeletonAttack.SetThrowSpeed(throwSpeed);
             skeletonAttack.SetBoneSpeed(boneSpeed);
+            skeletonAttack.SetBoneDamage(boneDamage);
         }
 
 
@@ -102,7 +104,7 @@ public class MonsterSpawner : MonoBehaviour
         }
     }
 
-    private void SetNewWave(int wave)
+    private void SetNewWave(int wave) //Called every new wave, these are the settings for each wave.
     {
         switch (wave)
         {
@@ -110,6 +112,7 @@ public class MonsterSpawner : MonoBehaviour
                 spawnDelay = 10f;
                 throwSpeed = .9f;
                 boneSpeed = 8f;
+                boneDamage = 20f;
                 currentWave = wave1;
                 break;
             case 2:

@@ -9,6 +9,7 @@ public class SkeletonAttack : MonoBehaviour
 
     
     private float boneSpeed = 40;
+    private float boneDamage = 5f;
 
     private Animator topAnim;
 
@@ -30,6 +31,7 @@ public class SkeletonAttack : MonoBehaviour
     {
         GameObject bone = Instantiate(BonePrefab, leftForeArm.position, leftForeArm.rotation);
         bone.GetComponent<BoneProjectile>().moveSpeed = boneSpeed;
+        bone.GetComponent<BoneProjectile>().Damage = boneDamage;
     }
 
     public void SetThrowSpeed(float multiplier)
@@ -39,5 +41,9 @@ public class SkeletonAttack : MonoBehaviour
     public void SetBoneSpeed(float value)
     {
         boneSpeed = value;
+    }
+    public void SetBoneDamage(float value)
+    {
+        boneDamage = value;
     }
 }
