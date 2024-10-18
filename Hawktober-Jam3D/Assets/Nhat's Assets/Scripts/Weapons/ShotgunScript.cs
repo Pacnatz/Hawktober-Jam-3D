@@ -13,8 +13,6 @@ public class ShotgunScript : WeaponScript
     private LayerMask monsterLayer;
     [SerializeField]
     private Transform target;
-    [SerializeField]
-    private Transform closeTarget;
 
     [SerializeField]
     private Transform barrel;
@@ -43,12 +41,20 @@ public class ShotgunScript : WeaponScript
     public int holdingAmmo;
     private int maxAmmo;
 
+    private UIScript uiScript;
+
+    private AudioSource shootAudio;
+    private AudioSource pumpAudio;
 
     private void Start()
     {
         anim = GetComponent<Animator>();
         particles = barrel.GetChild(0).GetComponent<ParticleSystem>();
         gunLight = barrel.GetChild(1).gameObject;
+        uiScript = FindAnyObjectByType<UIScript>();
+
+        shootAudio = transform.Find("ShootSound").GetComponent<AudioSource>();
+        pumpAudio = transform.Find("PumpSound").GetComponent<AudioSource>();
 
         currentAmmo = 5;
         holdingAmmo = 18;
@@ -66,10 +72,13 @@ public class ShotgunScript : WeaponScript
     private void GetInput()
     {
         //Left Mouse button
-        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle && canFire)
+        if (Input.GetMouseButtonDown(0) && currentAmmo > 0 && animToggle && canFire && !uiScript.isPaused)
         {
             currentAmmo--;
             canFire = false;
+
+            shootAudio.pitch = Random.Range(.9f, 1.1f);
+            shootAudio.Play();
 
             for (int i = 0; i < bulletAmount; i++)
             {
@@ -88,9 +97,6 @@ public class ShotgunScript : WeaponScript
                     {
                         direction = target.position - barrel.position;
                     }
-                    //Deprecated
-                    //if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
-                    //else direction = target.position - barrel.position;
                 }
                 direction.Normalize();
 
@@ -235,34 +241,15 @@ public class ShotgunScript : WeaponScript
 
     private IEnumerator WaitForPump() //Delay before next shot
     {
-        
-        yield return new WaitForSeconds(.4f);
-        canFire = true;
-        /*
-        if (scopedIn)
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload") == false &&
-                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopedInFire") == false)
-            {
-                anim.Play("PumpIn");
-            }
-
-
-
-
-            
-        }
-        else
-        {
-            if (anim.GetCurrentAnimatorStateInfo(0).IsName("Reload") == false &&
-                anim.GetCurrentAnimatorStateInfo(0).IsName("ScopeOutFire") == false)
-            {
-                anim.Play("PumpOut");
-            }
-        }
+        yield return new WaitForSeconds(.25f);
+        PlayReload();
         yield return new WaitForSeconds(.15f);
         canFire = true;
-        */
+    }
+    public void PlayReload()
+    {
+        pumpAudio.pitch = Random.Range(.9f, 1.1f);
+        pumpAudio.Play();
     }
 
 }

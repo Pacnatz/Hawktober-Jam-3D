@@ -13,8 +13,6 @@ public class GunScript : WeaponScript
     private Camera mainCamera;
     [SerializeField]
     private Transform target;
-    [SerializeField]
-    private Transform closeTarget;
 
     [SerializeField]
     private Transform barrel;
@@ -86,9 +84,6 @@ public class GunScript : WeaponScript
                 {
                     direction = target.position - barrel.position;
                 }
-                //Old code, updated to use hitscan
-                //if (IsCloseToMonster) direction = closeTarget.position - barrel.position;
-                //else direction = target.position - barrel.position;
             }
             direction.Normalize();
 

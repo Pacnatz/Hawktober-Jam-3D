@@ -22,7 +22,6 @@ public class CameraScript : MonoBehaviour
     {
         if (startCamera && !CameraLock)
         {
-            Debug.Log("Should be working?");
             //Rotate camera object by rotationX & clamp rotationX to prevent issue with flipping screen
             rotationX -= Input.GetAxis("Mouse Y") * playerScript.cameraSensitivity * Time.deltaTime;
             rotationX = Mathf.Clamp(rotationX, -80, 80);

@@ -23,6 +23,7 @@ public class MonsterSpawner : MonoBehaviour
     private List<GameObject> currentWave;
     private List<GameObject> wave1;
     private List<GameObject> wave2;
+    private List<GameObject> wave3;
 
     [HideInInspector]
     public List<GameObject> CurrentEnemies;
@@ -34,9 +35,10 @@ public class MonsterSpawner : MonoBehaviour
     {
         //wave1 = new List<GameObject>() { skeletonPrefab };
         wave1 = new List<GameObject>() { skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab };
-        wave2 = new List<GameObject>() { skeletonPrefab, skeletonPrefab, skeletonPrefab };
+        wave2 = new List<GameObject>() { skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab };
+        wave3 = new List<GameObject>() { skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab, skeletonPrefab };
 
-        StartCoroutine(StartGame());
+        StartCoroutine(StartGame()); //Starts wave after 2 seconds
     }
 
 
@@ -109,24 +111,27 @@ public class MonsterSpawner : MonoBehaviour
         switch (wave)
         {
             case 1:
-                spawnDelay = 10f;
-                throwSpeed = .9f;
-                boneSpeed = 8f;
-                boneDamage = 20f;
-                currentWave = wave1;
+                SetWaveSettings(10f, .9f, 8f, 5f, 80f, wave1);
                 break;
             case 2:
-                spawnDelay = 9f;
-                throwSpeed = 1f;
-                boneSpeed = 10f;
-                currentWave = wave2;
-
+                SetWaveSettings(9f, 1f, 10f, 7f, 90f, wave2);
+                break;
+            case 3:
+                SetWaveSettings(8.5f, 1.05f, 11f, 8f, 100f, wave3);
                 break;
             default:
                 isActive = false;
                 break;
 
         }
+    }
+    private void SetWaveSettings(float _spawnDelay, float _throwSpeed, float _boneSpeed, float _boneDamage, float _skeleHealth, List<GameObject> _wave)
+    {
+        spawnDelay = _spawnDelay;
+        throwSpeed = _throwSpeed;
+        boneSpeed = _boneSpeed;
+        skeleHealth = _skeleHealth;
+        currentWave = _wave;
     }
 
 }

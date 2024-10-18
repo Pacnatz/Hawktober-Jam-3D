@@ -19,11 +19,9 @@ public class SwitchWeapons : MonoBehaviour
 
     [HideInInspector]
     public float AudioVolume = 1f;
-    private AudioListener audioListener; //Adjusted from UI Volume Slider
 
     private void Start()
     {
-        audioListener = GetComponent<AudioListener>();
 
         currentWeapon = weapons[2]; //Start with shovel
         StartCoroutine(DrawWeapon(currentWeapon));

@@ -4,7 +4,7 @@ using UnityEngine;
 public class Skeleton : Monster
 {
     public float Health = 100;
-    public float WalkRange = 16;
+    public float WalkRange = 20;
     public float AttackRange = 9;
     public float BackUpRange = 5;
 
@@ -15,7 +15,6 @@ public class Skeleton : Monster
     [SerializeField]
     private Animator bottomAnim;
 
-    [SerializeField]
     private MonsterSpawner spawnScript;
 
     private Transform player;

@@ -1120,7 +1120,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   Health: 100
-  WalkRange: 16
+  WalkRange: 20
   AttackRange: 9
   BackUpRange: 5
   BodyParts:

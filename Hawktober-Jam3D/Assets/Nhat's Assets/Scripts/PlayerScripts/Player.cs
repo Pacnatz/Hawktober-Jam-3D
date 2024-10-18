@@ -21,7 +21,6 @@ public class Player : MonoBehaviour
 
     private void Update()
     {
-        Debug.Log(mainCamera.localPosition);
         if (Health <= 0)
         {
             Die();
