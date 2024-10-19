@@ -11,7 +11,7 @@ GameObject:
   - component: {fileID: 1982511663529320783}
   - component: {fileID: 593339679538249624}
   - component: {fileID: 9176425199088435492}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Mesh
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -98,7 +98,7 @@ GameObject:
   - component: {fileID: 3879230948593000730}
   - component: {fileID: 4742170350224850871}
   - component: {fileID: 4885669752101350135}
-  m_Layer: 0
+  m_Layer: 10
   m_Name: Bone
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -183,3 +183,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9abb235147439e0419cc83bd7f9f94f7, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  Damage: 10
+  moveSpeed: 10

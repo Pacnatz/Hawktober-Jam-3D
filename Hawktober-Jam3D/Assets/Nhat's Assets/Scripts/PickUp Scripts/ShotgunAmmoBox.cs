@@ -12,6 +12,7 @@ public class ShotgunAmmoBox : AmmoBox
         shotgunScript = Camera.main.transform.Find("ShotGun").GetComponent<ShotgunScript>();
         endPos = transform.position + new Vector3(0, 1.2f, 0);
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();
+        particles.Play();
     }
 
 

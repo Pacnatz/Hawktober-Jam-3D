@@ -49,6 +49,5 @@ public class AmmoBox : MonoBehaviour
                 Destroy(gameObject);
             }
         }
-        Instantiate(gunScript, Vector3.zero.normalized, Quaternion.identity);
     }
 }

@@ -24,11 +24,20 @@ public class ShovelScript : WeaponScript
     private float meleeDamage = 20;
 
     private UIScript uiScript;
+
+    private AudioSource digSound;
+    private AudioSource hitSound;
+    private AudioSource missSound;
+
     private void Start()
     {
         anim = GetComponent<Animator>();
         mainCamera = Camera.main.transform;
         uiScript = FindAnyObjectByType<UIScript>();
+
+        digSound = transform.Find("DigSound").GetComponent<AudioSource>();
+        hitSound = transform.Find("HitSound").GetComponent<AudioSource>();
+        missSound = transform.Find("MissSound").GetComponent<AudioSource>();
     }
     private void Update()
     {
@@ -53,6 +62,8 @@ public class ShovelScript : WeaponScript
                 if (animToggle)
                 {
                     anim.Play("Dig"); //Calls FreezeCamera
+                    digSound.pitch = Random.Range(.9f, 1f);
+                    digSound.Play();
                 }
             }
         }
@@ -87,15 +98,23 @@ public class ShovelScript : WeaponScript
         selectedGraveDirt.PlayAnimation();
     }
 
-    public void HitEnemy()
+    public void HitEnemy() //Called from event from animator
     {
         if (selectedMonster != null)
         {
+            hitSound.pitch = Random.Range(.9f, 1.1f);
+            hitSound.Play();
+
             selectedMonster.TryGetComponent<Skeleton>(out var skeleScript);
             if (skeleScript)
             {
                 skeleScript.Health -= meleeDamage;
             }
+        }
+        else
+        {
+            missSound.pitch = Random.Range(.9f, 1.1f);
+            missSound.Play();
         }
         
     }

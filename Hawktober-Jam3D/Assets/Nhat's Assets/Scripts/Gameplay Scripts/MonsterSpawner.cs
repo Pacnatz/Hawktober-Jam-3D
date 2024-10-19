@@ -111,7 +111,7 @@ public class MonsterSpawner : MonoBehaviour
         switch (wave)
         {
             case 1:
-                SetWaveSettings(10f, .9f, 8f, 5f, 80f, wave1);
+                SetWaveSettings(10f, .9f, 8f, 50f, 80f, wave1);
                 break;
             case 2:
                 SetWaveSettings(9f, 1f, 10f, 7f, 90f, wave2);
@@ -130,6 +130,7 @@ public class MonsterSpawner : MonoBehaviour
         spawnDelay = _spawnDelay;
         throwSpeed = _throwSpeed;
         boneSpeed = _boneSpeed;
+        boneDamage = _boneDamage;
         skeleHealth = _skeleHealth;
         currentWave = _wave;
     }

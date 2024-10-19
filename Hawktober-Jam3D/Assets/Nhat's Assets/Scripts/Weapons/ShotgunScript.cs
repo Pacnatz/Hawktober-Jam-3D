@@ -176,8 +176,9 @@ public class ShotgunScript : WeaponScript
     }
     public void UpdateAmmo()
     {
-        if (holdingAmmo > 0)
+        if (holdingAmmo > 0 && currentAmmo < 5)
         {
+            
             currentAmmo++;
             holdingAmmo--;
             if (holdingAmmo <= 0)

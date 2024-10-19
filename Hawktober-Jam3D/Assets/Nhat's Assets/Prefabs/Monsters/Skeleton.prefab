@@ -1139,7 +1139,6 @@ MonoBehaviour:
   - {fileID: 2130509655865024076}
   topAnim: {fileID: 5124825222664877443}
   bottomAnim: {fileID: 5906069409163352865}
-  spawnScript: {fileID: 0}
 --- !u!1 &7370674787290816519
 GameObject:
   m_ObjectHideFlags: 0

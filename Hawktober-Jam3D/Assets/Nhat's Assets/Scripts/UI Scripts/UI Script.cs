@@ -51,10 +51,16 @@ public class UIScript : MonoBehaviour
     public Slider sensitivitySlider;
     public Slider audioSlider;
 
+    //GameOver variables;
+    public GameObject gameOverContainer;
+
 
     private PlayerMove playerMove;
     private Player player;
+
     public Slider playerHealthSlider;
+    public TMP_Text playerHealthTMP;
+
     private SwitchWeapons switchWeaponsScript;
 
     void Start()
@@ -65,8 +71,16 @@ public class UIScript : MonoBehaviour
         waveTMPro = waveContainer.GetChild(0).GetComponent<TMP_Text>();
         playerMove = FindAnyObjectByType<PlayerMove>();
         player = FindAnyObjectByType<Player>();
+
         switchWeaponsScript = FindAnyObjectByType<SwitchWeapons>();
         ammoArrayPosition = 2;
+
+
+        isPaused = false;
+        PauseMenu.SetActive(false);
+        Cursor.visible = false;
+        Cursor.lockState = CursorLockMode.Locked;
+        Time.timeScale = 1f;
     }
     void Update()
     {
@@ -115,6 +129,7 @@ public class UIScript : MonoBehaviour
         waveTMPro.text = $"WAVE {spawnScript.wave}";
 
         playerHealthSlider.value = player.Health / 100;
+        playerHealthTMP.text = $"HEALTH: {player.Health}";
         
 
         //Pause game
@@ -142,6 +157,18 @@ public class UIScript : MonoBehaviour
                     inactiveContainerPosition, ref shotgunVelocity, containerMoveSpeed * Time.deltaTime);
     }
 
+    public void GameOver()
+    {
+        Cursor.visible = true;
+        Cursor.lockState = CursorLockMode.None;
+        isPaused = true;
+        gameOverContainer.SetActive(true);
+    }
+
+    public void PlayAgain()
+    {
+        SceneManager.LoadScene("Game Scene");
+    }
 
     public void ResumeGame()
     {

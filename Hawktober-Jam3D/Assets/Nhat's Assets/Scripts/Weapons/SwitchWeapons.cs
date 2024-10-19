@@ -38,6 +38,8 @@ public class SwitchWeapons : MonoBehaviour
         AudioListener.volume = AudioVolume;
 
         GetInput();
+
+
     }
     private void GetInput()
     {
@@ -66,6 +68,7 @@ public class SwitchWeapons : MonoBehaviour
 
         yield return new WaitForSeconds(DockTime);
         
+
     }
 
     private IEnumerator DockWeapon(GameObject oldWeapon, GameObject newWeapon)
