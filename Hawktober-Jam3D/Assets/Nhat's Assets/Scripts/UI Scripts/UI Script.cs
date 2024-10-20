@@ -84,6 +84,7 @@ public class UIScript : MonoBehaviour
     }
     void Update()
     {
+        //Ammo text smooth damp
         switch (ammoArrayPosition)
         {
             case 0:
@@ -102,7 +103,7 @@ public class UIScript : MonoBehaviour
                 HideShotGunContainer();
                 break;
         }
-
+        //Show wave smooth damp
         if (ShowWave)
         {
             waveContainer.anchoredPosition3D = Vector3.SmoothDamp(waveContainer.anchoredPosition3D,
@@ -123,7 +124,7 @@ public class UIScript : MonoBehaviour
         
 
 
-
+        //Text values
         gunTMPro.text = $"{gunScript.currentAmmo}/{gunScript.holdingAmmo}";
         shotgunTMPro.text = $"{shotgunScript.currentAmmo}/{shotgunScript.holdingAmmo}";
         waveTMPro.text = $"WAVE {spawnScript.wave}";

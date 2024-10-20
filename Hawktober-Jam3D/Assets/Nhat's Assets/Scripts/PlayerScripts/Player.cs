@@ -65,8 +65,8 @@ public class Player : MonoBehaviour
         }
         else
         {
-            Time.timeScale = 0;
-            vignette.color.Override(Color.red);
+            
+
             colorAdj.colorFilter.Override(new Color(255, 160, 160)); //Supposed to change to red but this looks cooler
             uiScript.GameOver();
         }

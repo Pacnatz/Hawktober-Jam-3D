@@ -12,6 +12,8 @@ public class GraveDirtScript : MonoBehaviour
     [SerializeField]
     private GameObject shotgunAmmoBoxPrefab;
     [SerializeField]
+    private GameObject mudkipPrefab;
+    [SerializeField]
     private Transform ammoSpawnPos;
 
     private int animationFrame = 0;
@@ -58,7 +60,7 @@ public class GraveDirtScript : MonoBehaviour
     }
     public void SpawnAmmo() //Called from animation player
     {
-        int choice = Random.Range(1, 3);
+        int choice = Random.Range(1, 4);
         switch (choice)
         {
             case 1:
@@ -66,6 +68,9 @@ public class GraveDirtScript : MonoBehaviour
                 break;
             case 2:
                 Instantiate(shotgunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
+                break;
+            case 3:
+                Instantiate(mudkipPrefab, ammoSpawnPos.position, Quaternion.identity);
                 break;
         }
         
