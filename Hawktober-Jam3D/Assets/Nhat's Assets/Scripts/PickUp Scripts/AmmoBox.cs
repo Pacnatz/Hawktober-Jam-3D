@@ -3,9 +3,9 @@ using UnityEngine;
 public class AmmoBox : MonoBehaviour
 {
     [SerializeField]
-    private float rotationSpeed = 180;
+    protected float rotationSpeed = 180;
     [SerializeField]
-    private float movementSpeed = 1.2f;
+    protected float movementSpeed = 1.2f;
 
     private GunScript gunScript;
 
@@ -15,7 +15,7 @@ public class AmmoBox : MonoBehaviour
 
     private const int MAX_M1911_AMMO = 192;
 
-    void Start()
+    private void Start()
     {
         endPos = transform.position + new Vector3(0, 1.2f, 0);
         particles = transform.Find("Particle System").GetComponent<ParticleSystem>();

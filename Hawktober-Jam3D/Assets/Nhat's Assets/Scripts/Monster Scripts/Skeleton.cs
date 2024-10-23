@@ -1,7 +1,7 @@
 using System.Collections;
 using UnityEngine;
 
-public class Skeleton : Monster
+public class Skeleton : MonoBehaviour
 {
     public float Health = 100;
     public float WalkRange = 20;
@@ -52,7 +52,7 @@ public class Skeleton : Monster
         if (isSpawning)
         {
             transform.position += Vector3.up * Time.deltaTime;
-            if (transform.position.y > .5 && !isDead)
+            if (transform.position.y > .5f && !isDead)
             {
                 isSpawning = false;
                 isActive = true;

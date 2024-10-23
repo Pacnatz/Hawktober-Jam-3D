@@ -4,7 +4,7 @@ public class MedkitScript : AmmoBox
 {
     private Player playerScript;
 
-
+    
 
     private void Start()
     {
@@ -14,17 +14,17 @@ public class MedkitScript : AmmoBox
         particles.Play();
     }
 
-
     protected override void OnTriggerStay(Collider other)
     {
         if (other.gameObject.layer == LayerMask.NameToLayer("Player"))
         {
             if (!floatingUp)
             {
-                playerScript.Health += 10;
+                playerScript.Health += 25;
                 Destroy(gameObject);
             }
             
         }
     }
+    
 }

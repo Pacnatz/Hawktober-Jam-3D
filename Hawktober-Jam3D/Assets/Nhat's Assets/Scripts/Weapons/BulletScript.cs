@@ -4,6 +4,7 @@ using System.Collections;
 public class BulletScript : MonoBehaviour
 { 
     public float BulletKillTime = 1.2f;
+    private float damage = 30f;
 
     private Rigidbody rb;
     void Start()
@@ -21,11 +22,21 @@ public class BulletScript : MonoBehaviour
         }
         if (other.gameObject.layer == LayerMask.NameToLayer("Monster"))
         {
+            other.TryGetComponent<Skeleton>(out var skeleScript);
+            other.TryGetComponent<Pumpkin>(out var pumpkinScript);
 
-            Skeleton skeleScript = other.gameObject.GetComponent<Skeleton>();
+            if (skeleScript)
+            {
+                skeleScript.Health -= damage;
+                Destroy(gameObject);
+            }
+            if (pumpkinScript)
+            {
+                pumpkinScript.Health -= damage;
+                Destroy(gameObject);
+            }
 
-            skeleScript.Health -= 30f;
-            Destroy(gameObject);
+
         }
     }
 

@@ -40,7 +40,7 @@ public class UIScript : MonoBehaviour
     public bool ShowWave = false;
     private float waveShowTime = 2f;
     private float timer = 2f;
-
+    private MonsterSpawner monsterSpawnScript;
     
 
     //Menu variables
@@ -61,8 +61,19 @@ public class UIScript : MonoBehaviour
     public Slider playerHealthSlider;
     public TMP_Text playerHealthTMP;
 
+    public Slider apocalypseSlider;
+    public TMP_Text waveTimerTMP;
+
     private SwitchWeapons switchWeaponsScript;
 
+    private void Awake()
+    {
+        if (MainMenuAudio.instance)
+        {
+            Destroy(MainMenuAudio.instance.gameObject);
+        }
+        
+    }
     void Start()
     {
 
@@ -73,6 +84,7 @@ public class UIScript : MonoBehaviour
         player = FindAnyObjectByType<Player>();
 
         switchWeaponsScript = FindAnyObjectByType<SwitchWeapons>();
+        monsterSpawnScript = FindAnyObjectByType<MonsterSpawner>();
         ammoArrayPosition = 2;
 
 
@@ -131,6 +143,13 @@ public class UIScript : MonoBehaviour
 
         playerHealthSlider.value = player.Health / 100;
         playerHealthTMP.text = $"HEALTH: {player.Health}";
+
+        if (monsterSpawnScript.isActive)
+        {
+            apocalypseSlider.value = monsterSpawnScript.waveTimer / monsterSpawnScript.waveTimerStart;
+            waveTimerTMP.text = $"APOCALYPSE TIMER: {Math.Round(monsterSpawnScript.waveTimer)}";
+        }
+        
         
 
         //Pause game
@@ -162,12 +181,14 @@ public class UIScript : MonoBehaviour
     {
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 0;
         isPaused = true;
         gameOverContainer.SetActive(true);
     }
 
     public void PlayAgain()
     {
+        Time.timeScale = 1f;
         SceneManager.LoadScene("Game Scene");
     }
 
@@ -205,6 +226,7 @@ public class UIScript : MonoBehaviour
     public void MainMenu()
     {
         ResumeGame();
+
         SceneManager.LoadScene("MainMenu");
     }
     

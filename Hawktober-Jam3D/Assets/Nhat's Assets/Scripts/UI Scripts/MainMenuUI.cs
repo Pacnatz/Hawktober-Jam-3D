@@ -4,6 +4,8 @@ using System.Collections;
 
 public class MainMenuUI : MonoBehaviour
 {
+    public GameObject MainMenuMusic;
+
     private Vector3 activePlayContainerPosition = new Vector3(0, 0, 0);
     private Vector3 activeInfoContainerPosition = new Vector3(0, -200, 0);
     private Vector3 activeQuitContainerPosition = new Vector3(0, -400, 0);
@@ -24,9 +26,10 @@ public class MainMenuUI : MonoBehaviour
 
     private void Start()
     {
-        Debug.Log("Start");
+
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        Time.timeScale = 1f;
         StartCoroutine(StartMainMenu());
     }
 
@@ -45,7 +48,13 @@ public class MainMenuUI : MonoBehaviour
 
     public void PlayGame()
     {
+        Destroy(MainMenuMusic);
         SceneManager.LoadScene("Game Scene");
+    }
+    public void InfoButton()
+    {
+        DontDestroyOnLoad(MainMenuMusic);
+        SceneManager.LoadScene("Tutorial");
     }
     public void ExitGame()
     {
@@ -58,13 +67,5 @@ public class MainMenuUI : MonoBehaviour
         shovelAnim.Play("Play");
         yield return new WaitForSeconds(1f);
         moveButtons = true;
-    }
-
-    private void HideMainMenu(bool hide)
-    {
-        if (hide)
-        {
-
-        }
     }
 }

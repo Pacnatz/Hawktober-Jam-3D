@@ -60,18 +60,19 @@ public class GraveDirtScript : MonoBehaviour
     }
     public void SpawnAmmo() //Called from animation player
     {
-        int choice = Random.Range(1, 4);
-        switch (choice)
+        int choice = Random.Range(0, 99);
+
+        if (choice >= 0 && choice < 40)
         {
-            case 1:
-                Instantiate(gunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
-                break;
-            case 2:
-                Instantiate(shotgunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
-                break;
-            case 3:
-                Instantiate(mudkipPrefab, ammoSpawnPos.position, Quaternion.identity);
-                break;
+            Instantiate(gunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
+        }
+        else if (choice >= 40 && choice < 80)
+        {
+            Instantiate(shotgunAmmoBoxPrefab, ammoSpawnPos.position, Quaternion.identity);
+        }
+        else
+        {
+            Instantiate(mudkipPrefab, ammoSpawnPos.position, Quaternion.identity);
         }
         
     }

@@ -4,6 +4,7 @@ using UnityEngine;
 public class ShotGunBullet : MonoBehaviour
 { 
     public float BulletKillTime = 1f;
+    private float damage = 10f;
 
     private Rigidbody rb;
     void Start()
@@ -25,12 +26,19 @@ public class ShotGunBullet : MonoBehaviour
         }
         if (other.gameObject.layer == LayerMask.NameToLayer("Monster"))
         {
+            other.TryGetComponent<Skeleton>(out var skeleScript);
+            other.TryGetComponent<Pumpkin>(out var pumpkinScript);
 
-            Skeleton skeleScript = other.gameObject.GetComponent<Skeleton>();
-
-            skeleScript.Health -= 10f;
-
-            Destroy(gameObject);
+            if (skeleScript)
+            {
+                skeleScript.Health -= damage;
+                Destroy(gameObject);
+            }
+            if (pumpkinScript)
+            {
+                pumpkinScript.Health -= damage;
+                Destroy(gameObject);
+            }
         }
     }
 
